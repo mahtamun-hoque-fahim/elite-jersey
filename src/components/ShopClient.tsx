@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 import { ProductGrid } from "./ProductGrid";
-import { ALL_SIZES, categoryLabels, jerseys, type Category } from "@/data/jerseys";
+import { ALL_SIZES, categoryLabels, type Category, type Jersey } from "@/data/jerseys";
 import { cn } from "@/lib/cn";
 
 const PER_PAGE = 12;
@@ -16,7 +16,7 @@ function toggle<T>(list: T[], v: T) {
   return list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
 }
 
-export function ShopClient({ initialCategory }: { initialCategory?: Category }) {
+export function ShopClient({ items, initialCategory }: { items: Jersey[]; initialCategory?: Category }) {
   const q = (useSearchParams().get("q") ?? "").trim().toLowerCase();
   const [cats, setCats] = useState<Category[]>(initialCategory ? [initialCategory] : []);
   const [teams, setTeams] = useState<string[]>([]);
@@ -27,11 +27,11 @@ export function ShopClient({ initialCategory }: { initialCategory?: Category }) 
   const [page, setPage] = useState(1);
   const [sheet, setSheet] = useState(false);
 
-  const teamOptions = useMemo(() => [...new Set(jerseys.map((j) => j.team))].sort(), []);
-  const seasonOptions = useMemo(() => [...new Set(jerseys.map((j) => j.season))].sort().reverse(), []);
+  const teamOptions = useMemo(() => [...new Set(items.map((j) => j.team))].sort(), [items]);
+  const seasonOptions = useMemo(() => [...new Set(items.map((j) => j.season))].sort().reverse(), [items]);
 
   const filtered = useMemo(() => {
-    const list = jerseys.filter(
+    const list = items.filter(
       (j) =>
         (!cats.length || cats.includes(j.category)) &&
         (!teams.length || teams.includes(j.team)) &&
@@ -44,7 +44,7 @@ export function ShopClient({ initialCategory }: { initialCategory?: Category }) 
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
     if (sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [cats, teams, seasons, sizes, maxPrice, sort, q]);
+  }, [items, cats, teams, seasons, sizes, maxPrice, sort, q]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const current = Math.min(page, pages);

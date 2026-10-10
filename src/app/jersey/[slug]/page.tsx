@@ -6,22 +6,20 @@ import { JerseyArt } from "@/components/JerseyArt";
 import { ProductActions } from "@/components/ProductActions";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
-import { categoryLabels, getJersey, jerseys, money, related, savePercent } from "@/data/jerseys";
-
-export function generateStaticParams() {
-  return jerseys.map((j) => ({ slug: j.slug }));
-}
+import { categoryLabels, img, money, savePercent } from "@/data/jerseys";
+import { getJerseyBySlug, listJerseys, relatedFrom } from "@/lib/data/jerseys";
 
 export async function generateMetadata({ params }: PageProps<"/jersey/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const j = getJersey(slug);
+  const j = await getJerseyBySlug(slug);
   return j ? { title: j.name, description: j.description } : { title: "Jersey not found" };
 }
 
 export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">) {
   const { slug } = await params;
-  const j = getJersey(slug);
+  const j = await getJerseyBySlug(slug);
   if (!j) notFound();
+  const rel = relatedFrom(await listJerseys(), j);
 
   const save = savePercent(j);
   const specs = [
@@ -49,7 +47,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
           )}
           {j.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={j.image} alt={j.name} className="aspect-square w-full object-cover" />
+            <img src={img(j.image, "f_auto,q_auto,w_1000")} alt={j.name} className="aspect-square w-full object-cover" />
           ) : (
             <JerseyArt colors={j.colors} pattern={j.pattern} title={j.name} className="aspect-square w-full p-8" />
           )}
@@ -81,7 +79,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
 
       <section className="mt-12">
         <SectionHeading title="Related jerseys" href={`/shop/${j.category}`} />
-        <ProductGrid items={related(j)} className="xl:grid-cols-4" />
+        <ProductGrid items={rel} className="xl:grid-cols-4" />
       </section>
     </div>
   );

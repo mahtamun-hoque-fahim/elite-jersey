@@ -21,3 +21,9 @@ Layout reference: jersey.com.bd (clean, minimal, white cards on light grey). Str
 - No cart, login, wishlist or checkout. Orders happen on WhatsApp.
 - No emojis. lucide-react icons only; hand-rolled SVG for Facebook and Instagram (not in lucide).
 - Jersey images are SVG placeholders (JerseyArt) until real photos are uploaded.
+
+## Admin dashboard (/admin)
+- Same tokens as the public site. White sidebar (top bar on mobile), light-grey content area, white cards with thin borders.
+- Pages: Overview (stats, latest requests), Jerseys (table, stock toggle, edit, delete), Add/Edit jersey (photo upload to Cloudinary, sizes, flags), Inbox (custom orders and contact messages, mark handled, WhatsApp/call shortcuts), Admins (add and remove).
+- Login and first-admin setup pages are centered cards on the grey background.
+- Destructive actions (delete jersey, message, admin) ask for confirmation.

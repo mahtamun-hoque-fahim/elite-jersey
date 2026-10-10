@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { Check, Download, MessageCircle, X } from "lucide-react";
 import { JerseyArt } from "./JerseyArt";
 import { cn } from "@/lib/cn";
-import { money, type Jersey } from "@/data/jerseys";
+import { img, money, type Jersey } from "@/data/jerseys";
 import { waLink } from "@/lib/site";
 
 type Ctx = { open: (jersey: Jersey, size?: string) => void };
@@ -77,7 +77,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     setBusy(true);
     try {
       if (jersey.image) {
-        const res = await fetch(jersey.image);
+        const res = await fetch(img(jersey.image, "f_jpg,q_90,w_1200") ?? jersey.image);
         const blob = await res.blob();
         const ext = blob.type.split("/")[1]?.replace("jpeg", "jpg") || "jpg";
         saveBlob(blob, `${jersey.slug}.${ext}`);
@@ -125,7 +125,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
               <div ref={artRef} className="size-24 shrink-0 rounded-lg bg-white">
                 {jersey.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={jersey.image} alt={jersey.name} className="size-full rounded-lg object-cover" />
+                  <img src={img(jersey.image, "f_auto,q_auto,w_200")} alt={jersey.name} className="size-full rounded-lg object-cover" />
                 ) : (
                   <JerseyArt colors={jersey.colors} pattern={jersey.pattern} title={jersey.name} className="size-full" />
                 )}

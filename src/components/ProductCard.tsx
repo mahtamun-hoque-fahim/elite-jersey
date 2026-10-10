@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { JerseyArt } from "./JerseyArt";
 import { useOrder } from "./OrderProvider";
-import { money, savePercent, type Jersey } from "@/data/jerseys";
+import { img, money, savePercent, type Jersey } from "@/data/jerseys";
 
 export function ProductCard({ jersey }: { jersey: Jersey }) {
   const { open } = useOrder();
@@ -20,7 +20,7 @@ export function ProductCard({ jersey }: { jersey: Jersey }) {
         )}
         {jersey.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={jersey.image} alt={jersey.name} className="aspect-square w-full object-cover" />
+          <img src={img(jersey.image)} alt={jersey.name} loading="lazy" className="aspect-square w-full object-cover" />
         ) : (
           <JerseyArt colors={jersey.colors} pattern={jersey.pattern} title={jersey.name} className="aspect-square w-full p-3 transition-transform duration-300 ease-subtle group-hover:scale-105" />
         )}

@@ -1,36 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { MessageCircle } from "lucide-react";
+import { useActionState, useState } from "react";
+import { Send } from "lucide-react";
 import { Field, inputCls, textareaCls } from "./FormField";
-import { waLink } from "@/lib/site";
+import { SubmitSuccess } from "./SubmitSuccess";
+import { submitContact } from "@/app/actions";
 
 export function ContactForm() {
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [state, action, pending] = useActionState(async (prev: Awaited<ReturnType<typeof submitContact>> | undefined, fd: FormData) => {
+    const phone = String(fd.get("phone") ?? "").trim();
+    setMessage(`Message from ${String(fd.get("name") ?? "").trim()}${phone ? ` (${phone})` : ""}\n\n${String(fd.get("message") ?? "").trim()}`);
+    return submitContact(prev, fd);
+  }, undefined);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const f = new FormData(e.currentTarget);
-    const get = (k: string) => String(f.get(k) ?? "").trim();
-    if (!get("name") || !get("message")) {
-      setError("Please add your name and a message.");
-      return;
-    }
-    setError("");
-    window.open(waLink(`Message from ${get("name")}${get("phone") ? ` (${get("phone")})` : ""}\n\n${get("message")}`), "_blank", "noopener,noreferrer");
-  }
+  if (state?.ok) return <SubmitSuccess saved={Boolean(state.saved)} message={message} />;
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <form action={action} className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
+      <div aria-hidden="true" className="absolute -left-[9999px]">
+        <input name="website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Name" htmlFor="name"><input id="name" name="name" required autoComplete="name" className={inputCls} /></Field>
         <Field label="Phone (optional)" htmlFor="phone"><input id="phone" name="phone" type="tel" autoComplete="tel" className={inputCls} /></Field>
       </div>
       <Field label="Message" htmlFor="message"><textarea id="message" name="message" rows={5} required className={textareaCls} /></Field>
-      {error && <p role="alert" className="text-sm font-medium text-red-600">{error}</p>}
-      <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark sm:w-auto sm:px-8">
-        <MessageCircle className="size-5" />
-        Send on WhatsApp
+      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error}</p>}
+      <button type="submit" disabled={pending} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto sm:px-8">
+        <Send className="size-5" />
+        {pending ? "Sending..." : "Send message"}
       </button>
     </form>
   );

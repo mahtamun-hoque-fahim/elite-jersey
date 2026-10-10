@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { Download, MessageCircle, MousePointerClick } from "lucide-react";
 import { JerseyArt } from "@/components/JerseyArt";
+import { img } from "@/data/jerseys";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
-import { byCategory, jerseys } from "@/data/jerseys";
+import { listJerseys } from "@/lib/data/jerseys";
 
-export default function HomePage() {
-  const hero = [jerseys[0], jerseys[2], jerseys[1]];
-  const newClub = byCategory("club").filter((j) => j.isNew).slice(0, 10);
-  const country = byCategory("national").slice(0, 10);
-  const retroSpecial = [...byCategory("retro"), ...byCategory("special")].slice(0, 5);
+export default async function HomePage() {
+  const all = await listJerseys();
+  const heroPick = all.slice(0, 3);
+  const hero = [heroPick[1], heroPick[0], heroPick[2]].filter(Boolean);
+  const latest = all.slice(0, 10);
+  const club = all.filter((j) => j.category === "club").slice(0, 10);
+  const country = all.filter((j) => j.category === "national").slice(0, 10);
+  const retroSpecial = all.filter((j) => j.category === "retro" || j.category === "special").slice(0, 10);
 
   return (
     <div className="mx-auto max-w-7xl space-y-14 px-4 py-6">
@@ -31,33 +35,43 @@ export default function HomePage() {
             </div>
           </div>
           <div className="relative order-1 mx-auto flex w-full max-w-md items-end justify-center lg:order-2">
-            {hero.map((j, i) => (
-              <JerseyArt
-                key={j.id}
-                colors={j.colors}
-                pattern={j.pattern}
-                title={j.name}
-                className={i === 1 ? "relative z-10 -mx-6 w-1/2 drop-shadow-xl" : "w-2/5 drop-shadow-lg"}
-              />
-            ))}
+            {hero.map((j, i) =>
+              j.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={j.id}
+                  src={img(j.image, "f_auto,q_auto,w_500")}
+                  alt={j.name}
+                  className={i === 1 ? "relative z-10 -mx-6 w-1/2 rounded-xl bg-white object-cover shadow-xl" : "w-2/5 rounded-xl bg-white object-cover shadow-lg"}
+                />
+              ) : (
+                <JerseyArt
+                  key={j.id}
+                  colors={j.colors}
+                  pattern={j.pattern}
+                  title={j.name}
+                  className={i === 1 ? "relative z-10 -mx-6 w-1/2 drop-shadow-xl" : "w-2/5 drop-shadow-lg"}
+                />
+              ),
+            )}
           </div>
         </div>
       </section>
 
-      <section>
-        <SectionHeading title="New Arrival 26/27 Club Jersey" href="/shop/club" />
-        <ProductGrid items={newClub} />
-      </section>
-
-      <section>
-        <SectionHeading title="Premium Football Country Jersey" href="/shop/national" />
-        <ProductGrid items={country} />
-      </section>
-
-      <section>
-        <SectionHeading title="Retro and Special Editions" href="/shop/retro" />
-        <ProductGrid items={retroSpecial} />
-      </section>
+      {[
+        { title: "New Arrivals", href: "/shop", items: latest },
+        { title: "Club Jerseys", href: "/shop/club", items: club },
+        { title: "Country Jerseys", href: "/shop/national", items: country },
+        { title: "Retro and Special Editions", href: "/shop/retro", items: retroSpecial },
+      ].map(
+        (s) =>
+          s.items.length > 0 && (
+            <section key={s.title}>
+              <SectionHeading title={s.title} href={s.href} />
+              <ProductGrid items={s.items} />
+            </section>
+          ),
+      )}
 
       <section aria-labelledby="how-title" className="rounded-2xl border border-line bg-white p-6 sm:p-8">
         <h2 id="how-title" className="font-display text-xl font-semibold">How to order</h2>

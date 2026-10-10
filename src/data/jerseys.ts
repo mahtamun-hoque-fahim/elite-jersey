@@ -120,16 +120,17 @@ const seeds: Seed[] = [
   { team: "Portugal", kind: "Special", category: "special", season: "25/26", body: "#141414", trim: "#c8a24b", suffix: " Authentic Edition" },
 ];
 
-export const jerseys: Jersey[] = seeds.map(make);
+/** Sample data. Used only when DATABASE_URL is not set (local preview before env is filled in). */
+export const seedJerseys: Jersey[] = seeds.map(make);
 
-export const getJersey = (slug: string) => jerseys.find((j) => j.slug === slug);
-export const byCategory = (c: Category) => jerseys.filter((j) => j.category === c);
 export const savePercent = (j: Jersey) =>
   j.oldPrice ? Math.round(((j.oldPrice - j.price) / j.oldPrice) * 100) : 0;
 export const money = (n: number) => `৳${n.toLocaleString("en-US")}`;
 
-export function related(j: Jersey, n = 4) {
-  const same = jerseys.filter((x) => x.id !== j.id && (x.team === j.team || x.category === j.category));
-  same.sort((a, b) => Number(b.team === j.team) - Number(a.team === j.team));
-  return same.slice(0, n);
+export const NEUTRAL_COLORS = { body: "#cfd3da", sleeve: "#cfd3da", trim: "#9aa1ad" };
+
+/** Cloudinary delivery URL with transforms; other URLs pass through unchanged. */
+export function img(url: string | undefined, transform = "f_auto,q_auto,w_600") {
+  if (!url || !url.includes("/image/upload/")) return url;
+  return url.replace("/image/upload/", `/image/upload/${transform}/`);
 }
