@@ -4,7 +4,9 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 import { ProductGrid } from "./ProductGrid";
-import { ALL_SIZES, categoryLabels, type Category, type Jersey } from "@/data/jerseys";
+import { ALL_SIZES, type Category, type Jersey } from "@/data/jerseys";
+import { useI18n } from "@/i18n/client";
+import { fmt } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
 
 const PER_PAGE = 12;
@@ -17,6 +19,7 @@ function toggle<T>(list: T[], v: T) {
 }
 
 export function ShopClient({ items, initialCategory }: { items: Jersey[]; initialCategory?: Category }) {
+  const { t } = useI18n();
   const q = (useSearchParams().get("q") ?? "").trim().toLowerCase();
   const [cats, setCats] = useState<Category[]>(initialCategory ? [initialCategory] : []);
   const [teams, setTeams] = useState<string[]>([]);
@@ -62,24 +65,24 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
 
   const panel = (
     <div className="space-y-4">
-      <Group title="Category">
-        {(Object.keys(categoryLabels) as Category[]).map((c) => (
-          <Check key={c} label={categoryLabels[c]} checked={cats.includes(c)} onChange={() => { setCats(toggle(cats, c)); setPage(1); }} />
+      <Group title={t.shop.gCategory}>
+        {(Object.keys(t.categories) as Category[]).map((c) => (
+          <Check key={c} label={t.categories[c]} checked={cats.includes(c)} onChange={() => { setCats(toggle(cats, c)); setPage(1); }} />
         ))}
       </Group>
-      <Group title="Club / Country">
+      <Group title={t.shop.gTeam}>
         <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
           {teamOptions.map((t) => (
             <Check key={t} label={t} checked={teams.includes(t)} onChange={() => { setTeams(toggle(teams, t)); setPage(1); }} />
           ))}
         </div>
       </Group>
-      <Group title="Season">
+      <Group title={t.shop.gSeason}>
         {seasonOptions.map((s) => (
           <Check key={s} label={s} checked={seasons.includes(s)} onChange={() => { setSeasons(toggle(seasons, s)); setPage(1); }} />
         ))}
       </Group>
-      <Group title="Size">
+      <Group title={t.shop.gSize}>
         <div className="flex flex-wrap gap-2">
           {ALL_SIZES.map((s) => (
             <button
@@ -94,22 +97,22 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
           ))}
         </div>
       </Group>
-      <Group title="Price range">
+      <Group title={t.shop.gPrice}>
         <input
           type="range"
           min={500}
           max={MAX_PRICE}
           step={50}
           value={maxPrice}
-          aria-label="Maximum price"
+          aria-label={t.shop.maxPrice}
           onChange={(e) => { setMaxPrice(Number(e.target.value)); setPage(1); }}
           className="w-full accent-brand"
         />
-        <p className="text-xs text-muted">Up to ৳{maxPrice.toLocaleString("en-US")}</p>
+        <p className="text-xs text-muted">{fmt(t.shop.upTo, { price: `৳${maxPrice.toLocaleString("en-US")}` })}</p>
       </Group>
       {hasFilters && (
         <button type="button" onClick={reset} className="text-sm font-semibold text-brand hover:underline">
-          Clear all filters
+          {t.shop.clearAll}
         </button>
       )}
     </div>
@@ -122,23 +125,23 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
       <div>
         <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-line bg-white p-3">
           <button type="button" onClick={() => setSheet(true)} className="inline-flex items-center gap-2 text-sm font-semibold lg:hidden">
-            <SlidersHorizontal className="size-4" /> Filters
+            <SlidersHorizontal className="size-4" /> {t.shop.filters}
           </button>
           <p className="hidden text-sm text-muted lg:block">
-            {q ? `Results for "${q}": ` : ""}
-            {filtered.length} jerseys
+            {q ? fmt(t.shop.resultsFor, { q }) : ""}
+            {fmt(t.shop.count, { n: filtered.length })}
           </p>
           <label className="ml-auto flex items-center gap-2 text-sm">
-            <span className="font-semibold">Sort by:</span>
+            <span className="font-semibold">{t.shop.sortBy}</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
               className="h-9 rounded-lg border border-line bg-white px-2 text-sm"
             >
-              <option value="default">Default sorting</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="name">Name</option>
+              <option value="default">{t.shop.sortDefault}</option>
+              <option value="price-asc">{t.shop.sortPriceAsc}</option>
+              <option value="price-desc">{t.shop.sortPriceDesc}</option>
+              <option value="name">{t.shop.sortName}</option>
             </select>
           </label>
         </div>
@@ -147,23 +150,23 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
           <ProductGrid items={visible} className="lg:grid-cols-3 xl:grid-cols-4" />
         ) : (
           <div className="rounded-xl border border-dashed border-line bg-white p-10 text-center">
-            <p className="font-semibold">No jerseys found</p>
-            <p className="mt-1 text-sm text-muted">Try removing a filter or searching for something else.</p>
+            <p className="font-semibold">{t.shop.emptyTitle}</p>
+            <p className="mt-1 text-sm text-muted">{t.shop.emptyText}</p>
             {hasFilters && (
               <button type="button" onClick={reset} className="mt-4 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
-                Clear filters
+                {t.shop.clear}
               </button>
             )}
           </div>
         )}
 
         {pages > 1 && (
-          <nav aria-label="Pagination" className="mt-8 flex items-center justify-between text-sm text-muted">
+          <nav aria-label={t.shop.pagination} className="mt-8 flex items-center justify-between text-sm text-muted">
             <p>
-              Showing {(current - 1) * PER_PAGE + 1} - {Math.min(current * PER_PAGE, filtered.length)} of {filtered.length} results
+              {fmt(t.shop.showing, { from: (current - 1) * PER_PAGE + 1, to: Math.min(current * PER_PAGE, filtered.length), total: filtered.length })}
             </p>
             <div className="flex items-center gap-1">
-              <button type="button" aria-label="Previous page" disabled={current === 1} onClick={() => setPage(current - 1)} className="grid size-9 place-items-center rounded-lg hover:bg-white disabled:opacity-40">
+              <button type="button" aria-label={t.shop.prev} disabled={current === 1} onClick={() => setPage(current - 1)} className="grid size-9 place-items-center rounded-lg hover:bg-white disabled:opacity-40">
                 <ChevronLeft className="size-4" />
               </button>
               {Array.from({ length: pages }).map((_, i) => (
@@ -177,7 +180,7 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
                   {i + 1}
                 </button>
               ))}
-              <button type="button" aria-label="Next page" disabled={current === pages} onClick={() => setPage(current + 1)} className="grid size-9 place-items-center rounded-lg hover:bg-white disabled:opacity-40">
+              <button type="button" aria-label={t.shop.next} disabled={current === pages} onClick={() => setPage(current + 1)} className="grid size-9 place-items-center rounded-lg hover:bg-white disabled:opacity-40">
                 <ChevronRight className="size-4" />
               </button>
             </div>
@@ -186,18 +189,18 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
       </div>
 
       {sheet && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
-          <button type="button" aria-label="Close filters" className="absolute inset-0 bg-black/50" onClick={() => setSheet(false)} />
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={t.shop.filters}>
+          <button type="button" aria-label={t.shop.closeFilters} className="absolute inset-0 bg-black/50" onClick={() => setSheet(false)} />
           <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold">Filters</h2>
-              <button type="button" aria-label="Close" onClick={() => setSheet(false)} className="grid size-9 place-items-center rounded-full hover:bg-bg">
+              <h2 className="font-display text-lg font-semibold">{t.shop.filters}</h2>
+              <button type="button" aria-label={t.shop.close} onClick={() => setSheet(false)} className="grid size-9 place-items-center rounded-full hover:bg-bg">
                 <X className="size-5" />
               </button>
             </div>
             {panel}
             <button type="button" onClick={() => setSheet(false)} className="mt-6 h-12 w-full rounded-xl bg-brand font-semibold text-white">
-              Show {filtered.length} jerseys
+              {fmt(t.shop.showN, { n: filtered.length })}
             </button>
           </div>
         </div>

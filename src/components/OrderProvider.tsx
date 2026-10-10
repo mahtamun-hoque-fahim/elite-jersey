@@ -6,6 +6,7 @@ import { JerseyArt } from "./JerseyArt";
 import { cn } from "@/lib/cn";
 import { img, money, type Jersey } from "@/data/jerseys";
 import { waLink } from "@/lib/site";
+import { useI18n } from "@/i18n/client";
 
 type Ctx = { open: (jersey: Jersey, size?: string) => void };
 const OrderContext = createContext<Ctx | null>(null);
@@ -52,6 +53,7 @@ function saveBlob(blob: Blob, filename: string) {
 }
 
 export function OrderProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const [jersey, setJersey] = useState<Jersey | null>(null);
   const [size, setSize] = useState<string>("");
   const [downloaded, setDownloaded] = useState(false);
@@ -112,13 +114,13 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setJersey(null)}
-              aria-label="Close"
+              aria-label={t.shop.close}
               className="absolute right-3 top-3 grid size-9 place-items-center rounded-full text-muted hover:bg-bg hover:text-ink"
             >
               <X className="size-5" />
             </button>
             <h2 id="order-title" className="pr-8 font-display text-xl font-semibold">
-              Order on WhatsApp
+              {t.order.title}
             </h2>
 
             <div className="mt-4 flex gap-4 rounded-xl bg-bg p-3">
@@ -137,7 +139,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             </div>
 
             <fieldset className="mt-4">
-              <legend className="mb-2 text-sm font-semibold">Select size</legend>
+              <legend className="mb-2 text-sm font-semibold">{t.order.selectSize}</legend>
               <div className="flex flex-wrap gap-2">
                 {jersey.sizes.map((s) => (
                   <button
@@ -157,9 +159,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             </fieldset>
 
             <ol className="mt-5 space-y-2 text-sm text-muted">
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">1</span>Download the jersey photo.</li>
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">2</span>Open WhatsApp with your order message.</li>
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">3</span>Attach the photo and send. We confirm the rest there.</li>
+              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">1</span>{t.order.s1}</li>
+              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">2</span>{t.order.s2}</li>
+              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">3</span>{t.order.s3}</li>
             </ol>
 
             <div className="mt-5 space-y-2.5">
@@ -170,7 +172,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
               >
                 {downloaded ? <Check className="size-5" /> : <Download className="size-5" />}
-                {downloaded ? "Photo downloaded" : busy ? "Preparing..." : "Download Photo"}
+                {downloaded ? t.order.downloaded : busy ? t.order.preparing : t.order.download}
               </button>
               <a
                 href={downloaded ? waLink(message) : undefined}
@@ -184,10 +186,10 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                 )}
               >
                 <MessageCircle className="size-5" />
-                Continue to WhatsApp
+                {t.order.cont}
               </a>
             </div>
-            <p className="mt-3 text-center text-xs text-muted">We confirm price, delivery and payment on WhatsApp.</p>
+            <p className="mt-3 text-center text-xs text-muted">{t.order.note}</p>
           </div>
         )}
       </dialog>

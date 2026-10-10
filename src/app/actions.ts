@@ -19,7 +19,7 @@ export async function submitCustomOrder(_prev: FormResult | undefined, formData:
   const raw = fields(formData);
   if (isBot(raw)) return { ok: true, saved: true };
   const parsed = customOrderSchema.safeParse(raw);
-  if (!parsed.success) return { ok: false, error: "Please fill in team name, contact person, phone and quantity." };
+  if (!parsed.success) return { ok: false, error: "invalid" };
   const d = parsed.data;
 
   const db = getDb();
@@ -38,7 +38,7 @@ export async function submitContact(_prev: FormResult | undefined, formData: For
   const raw = fields(formData);
   if (isBot(raw)) return { ok: true, saved: true };
   const parsed = contactSchema.safeParse(raw);
-  if (!parsed.success) return { ok: false, error: "Please add your name and a message." };
+  if (!parsed.success) return { ok: false, error: "invalid" };
   const d = parsed.data;
 
   const db = getDb();

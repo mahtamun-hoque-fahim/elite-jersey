@@ -9,13 +9,13 @@ export const site = {
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "",
   },
   nav: [
-    { href: "/", label: "Home" },
-    { href: "/shop", label: "Shop" },
-    { href: "/shop/club", label: "Club Jersey" },
-    { href: "/shop/national", label: "Country Jersey" },
-    { href: "/shop/retro", label: "Retro Jerseys" },
-    { href: "/shop/special", label: "Special Edition" },
-    { href: "/custom-order", label: "Custom Order" },
+    { href: "/", key: "home" },
+    { href: "/shop", key: "shop" },
+    { href: "/shop/club", key: "club" },
+    { href: "/shop/national", key: "national" },
+    { href: "/shop/retro", key: "retro" },
+    { href: "/shop/special", key: "special" },
+    { href: "/custom-order", key: "custom" },
   ],
 } as const;
 

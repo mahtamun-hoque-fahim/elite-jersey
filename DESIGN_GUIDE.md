@@ -27,3 +27,10 @@ Layout reference: jersey.com.bd (clean, minimal, white cards on light grey). Str
 - Pages: Overview (stats, latest requests), Jerseys (table, stock toggle, edit, delete), Add/Edit jersey (photo upload to Cloudinary, sizes, flags), Inbox (custom orders and contact messages, mark handled, WhatsApp/call shortcuts), Admins (add and remove).
 - Login and first-admin setup pages are centered cards on the grey background.
 - Destructive actions (delete jersey, message, admin) ask for confirmation.
+
+## Language (English / Bengali)
+- Toggle in the header (shows the other language: "বাং" or "EN"). Choice is stored in the `lang` cookie; with no cookie the browser language decides (Bengali if it starts with bn), else English.
+- All UI strings live in `src/i18n/dictionaries.ts` (en and bn). Server components use `getT()` from `src/i18n/server.ts`, client components use `useI18n()`. Add every new string to both languages.
+- Fonts: Poppins and Open Sans for Latin, Noto Sans Bengali Variable for Bengali (loaded only when Bengali glyphs appear).
+- Jersey names and descriptions come from the dashboard and are shown as entered (single language). WhatsApp messages stay in English so the shop owner reads one format.
+- Storefront chrome (header, footer, WhatsApp button, order popup) lives in `src/app/(site)/layout.tsx`. The admin dashboard has its own layout and stays English.

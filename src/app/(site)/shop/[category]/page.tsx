@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ShopClient } from "@/components/ShopClient";
 import { categoryLabels, type Category } from "@/data/jerseys";
+import { getT } from "@/i18n/server";
 import { listJerseys } from "@/lib/data/jerseys";
 
 const keys = Object.keys(categoryLabels) as Category[];
@@ -21,9 +22,10 @@ export default async function CategoryPage({ params }: PageProps<"/shop/[categor
   if (!keys.includes(category as Category)) notFound();
   const c = category as Category;
   const items = await listJerseys();
+  const { t } = await getT();
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
-      <h1 className="mb-5 font-display text-2xl font-semibold">{categoryLabels[c]}</h1>
+      <h1 className="mb-5 font-display text-2xl font-semibold">{t.categories[c]}</h1>
       <Suspense fallback={<div className="h-96 animate-pulse rounded-xl bg-white" />}>
         <ShopClient key={c} items={items} initialCategory={c} />
       </Suspense>

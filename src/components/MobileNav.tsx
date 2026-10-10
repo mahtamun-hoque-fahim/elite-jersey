@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLinks } from "./NavLinks";
+import { useI18n } from "@/i18n/client";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
   return (
     <div className="lg:hidden">
       <button
         type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label={open ? t.common.closeMenu : t.common.openMenu}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className="grid size-10 place-items-center rounded-lg text-ink hover:bg-bg"

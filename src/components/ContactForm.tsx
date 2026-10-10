@@ -5,8 +5,11 @@ import { Send } from "lucide-react";
 import { Field, inputCls, textareaCls } from "./FormField";
 import { SubmitSuccess } from "./SubmitSuccess";
 import { submitContact } from "@/app/actions";
+import { useI18n } from "@/i18n/client";
 
 export function ContactForm() {
+  const { t } = useI18n();
+  const c = t.contactPage;
   const [message, setMessage] = useState("");
   const [state, action, pending] = useActionState(async (prev: Awaited<ReturnType<typeof submitContact>> | undefined, fd: FormData) => {
     const phone = String(fd.get("phone") ?? "").trim();
@@ -22,14 +25,14 @@ export function ContactForm() {
         <input name="website" tabIndex={-1} autoComplete="off" />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Name" htmlFor="name"><input id="name" name="name" required autoComplete="name" className={inputCls} /></Field>
-        <Field label="Phone (optional)" htmlFor="phone"><input id="phone" name="phone" type="tel" autoComplete="tel" className={inputCls} /></Field>
+        <Field label={c.name} htmlFor="name"><input id="name" name="name" required autoComplete="name" className={inputCls} /></Field>
+        <Field label={c.phone} htmlFor="phone"><input id="phone" name="phone" type="tel" autoComplete="tel" className={inputCls} /></Field>
       </div>
-      <Field label="Message" htmlFor="message"><textarea id="message" name="message" rows={5} required className={textareaCls} /></Field>
-      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error}</p>}
+      <Field label={c.message} htmlFor="message"><textarea id="message" name="message" rows={5} required className={textareaCls} /></Field>
+      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{c.invalid}</p>}
       <button type="submit" disabled={pending} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto sm:px-8">
         <Send className="size-5" />
-        {pending ? "Sending..." : "Send message"}
+        {pending ? t.custom.sending : c.send}
       </button>
     </form>
   );

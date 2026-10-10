@@ -4,11 +4,14 @@ import Link from "next/link";
 import { JerseyArt } from "./JerseyArt";
 import { useOrder } from "./OrderProvider";
 import { img, money, savePercent, type Jersey } from "@/data/jerseys";
+import { useI18n } from "@/i18n/client";
+import { fmt } from "@/i18n/dictionaries";
 
 export function ProductCard({ jersey }: { jersey: Jersey }) {
   const { open } = useOrder();
+  const { t } = useI18n();
   const save = savePercent(jersey);
-  const badge = save > 0 ? `SAVE ${save}%` : jersey.isNew ? "NEW" : null;
+  const badge = save > 0 ? fmt(t.card.save, { n: save }) : jersey.isNew ? t.card.new : null;
 
   return (
     <article className="flex flex-col rounded-xl border border-line bg-white p-3 transition-shadow duration-200 ease-subtle hover:shadow-md">
@@ -40,19 +43,19 @@ export function ProductCard({ jersey }: { jersey: Jersey }) {
           <button
             type="button"
             onClick={() => open(jersey)}
-            className="h-10 rounded-lg bg-brand text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
+            className="h-10 whitespace-nowrap rounded-lg bg-brand text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
           >
-            Buy Now
+            {t.card.buyNow}
           </button>
           <Link
             href={`/jersey/${jersey.slug}`}
             className="grid h-10 place-items-center rounded-lg border border-brand text-sm font-semibold text-brand transition-colors hover:bg-brand-tint"
           >
-            Details
+            {t.card.details}
           </Link>
         </div>
       ) : (
-        <p className="mt-3 grid h-10 place-items-center rounded-lg border border-line text-sm font-medium text-muted">Stock Out</p>
+        <p className="mt-3 grid h-10 place-items-center rounded-lg border border-line text-sm font-medium text-muted">{t.card.stockOut}</p>
       )}
     </article>
   );

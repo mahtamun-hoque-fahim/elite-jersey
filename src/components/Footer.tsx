@@ -3,15 +3,17 @@ import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { FacebookIcon, InstagramIcon } from "./BrandIcons";
 import { Logo } from "./Logo";
 import { site, waLink } from "@/lib/site";
+import { getT } from "@/i18n/server";
 
-export function Footer() {
+export async function Footer() {
+  const { t } = await getT();
   const { facebook, instagram } = site.social;
   return (
     <footer className="mt-16 border-t border-line bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <Logo />
-          <p className="max-w-xs text-sm leading-relaxed text-muted">{site.tagline}</p>
+          <p className="max-w-xs text-sm leading-relaxed text-muted">{t.footer.tagline}</p>
           <div className="flex gap-2">
             <a
               href={waLink("Hi Elite Jersey!")}
@@ -36,12 +38,12 @@ export function Footer() {
         </div>
 
         <div>
-          <h2 className="mb-4 font-display text-base font-semibold">Shop</h2>
+          <h2 className="mb-4 font-display text-base font-semibold">{t.footer.shop}</h2>
           <ul className="space-y-2.5 text-sm text-muted">
             {site.nav.slice(1, 6).map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="transition-colors hover:text-brand">
-                  {l.label}
+                  {t.nav[l.key]}
                 </Link>
               </li>
             ))}
@@ -49,15 +51,15 @@ export function Footer() {
         </div>
 
         <div>
-          <h2 className="mb-4 font-display text-base font-semibold">Company</h2>
+          <h2 className="mb-4 font-display text-base font-semibold">{t.footer.company}</h2>
           <ul className="space-y-2.5 text-sm text-muted">
-            <li><Link href="/custom-order" className="transition-colors hover:text-brand">Custom Order</Link></li>
-            <li><Link href="/contact" className="transition-colors hover:text-brand">Contact us</Link></li>
+            <li><Link href="/custom-order" className="transition-colors hover:text-brand">{t.nav.custom}</Link></li>
+            <li><Link href="/contact" className="transition-colors hover:text-brand">{t.footer.contactUs}</Link></li>
           </ul>
         </div>
 
         <div>
-          <h2 className="mb-4 font-display text-base font-semibold">Contact</h2>
+          <h2 className="mb-4 font-display text-base font-semibold">{t.footer.contact}</h2>
           <ul className="space-y-3 text-sm text-muted">
             {site.address && (
               <li className="flex gap-2"><MapPin className="mt-0.5 size-4 shrink-0" />{site.address}</li>
@@ -65,12 +67,12 @@ export function Footer() {
             {site.phone && (
               <li className="flex gap-2"><Phone className="mt-0.5 size-4 shrink-0" />{site.phone}</li>
             )}
-            <li className="flex gap-2"><MessageCircle className="mt-0.5 size-4 shrink-0" />Order and ask on WhatsApp</li>
+            <li className="flex gap-2"><MessageCircle className="mt-0.5 size-4 shrink-0" />{t.footer.orderAsk}</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-line py-5 text-center text-xs text-muted">
-        &copy; 2026 {site.name}. All rights reserved.
+        &copy; 2026 {site.name}. {t.footer.rights}
       </div>
     </footer>
   );

@@ -5,6 +5,7 @@ import { Send } from "lucide-react";
 import { Field, inputCls, textareaCls } from "./FormField";
 import { SubmitSuccess } from "./SubmitSuccess";
 import { submitCustomOrder } from "@/app/actions";
+import { useI18n } from "@/i18n/client";
 
 function buildMessage(f: FormData) {
   const get = (k: string) => String(f.get(k) ?? "").trim() || "-";
@@ -21,6 +22,8 @@ function buildMessage(f: FormData) {
 }
 
 export function CustomOrderForm() {
+  const { t } = useI18n();
+  const c = t.custom;
   const [message, setMessage] = useState("");
   const [state, action, pending] = useActionState(async (prev: Awaited<ReturnType<typeof submitCustomOrder>> | undefined, fd: FormData) => {
     setMessage(buildMessage(fd));
@@ -35,26 +38,26 @@ export function CustomOrderForm() {
         <input name="website" tabIndex={-1} autoComplete="off" />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Team name" htmlFor="team"><input id="team" name="team" required className={inputCls} /></Field>
-        <Field label="Contact person" htmlFor="contact"><input id="contact" name="contact" required autoComplete="name" className={inputCls} /></Field>
-        <Field label="Phone / WhatsApp" htmlFor="phone"><input id="phone" name="phone" type="tel" required autoComplete="tel" className={inputCls} /></Field>
-        <Field label="Quantity" htmlFor="quantity"><input id="quantity" name="quantity" type="number" min={1} required className={inputCls} /></Field>
-        <Field label="Jersey style" htmlFor="style">
+        <Field label={c.team} htmlFor="team"><input id="team" name="team" required className={inputCls} /></Field>
+        <Field label={c.contact} htmlFor="contact"><input id="contact" name="contact" required autoComplete="name" className={inputCls} /></Field>
+        <Field label={c.phone} htmlFor="phone"><input id="phone" name="phone" type="tel" required autoComplete="tel" className={inputCls} /></Field>
+        <Field label={c.quantity} htmlFor="quantity"><input id="quantity" name="quantity" type="number" min={1} required className={inputCls} /></Field>
+        <Field label={c.style} htmlFor="style">
           <select id="style" name="style" className={inputCls} defaultValue="">
-            <option value="">Select a style</option>
-            <option>Half sleeve</option>
-            <option>Full sleeve</option>
-            <option>Polo collar</option>
+            <option value="">{c.selectStyle}</option>
+            <option value="Half sleeve">{c.half}</option>
+            <option value="Full sleeve">{c.full}</option>
+            <option value="Polo collar">{c.polo}</option>
           </select>
         </Field>
-        <Field label="Deadline" htmlFor="deadline"><input id="deadline" name="deadline" type="date" className={inputCls} /></Field>
+        <Field label={c.deadline} htmlFor="deadline"><input id="deadline" name="deadline" type="date" className={inputCls} /></Field>
       </div>
-      <Field label="Sizes needed" htmlFor="sizes" hint="Example: 5 M, 5 L, 2 XL"><input id="sizes" name="sizes" className={inputCls} /></Field>
-      <Field label="Notes" htmlFor="notes" hint="Colors, names, numbers, sponsors. You can send design files on WhatsApp."><textarea id="notes" name="notes" rows={4} className={textareaCls} /></Field>
-      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error}</p>}
+      <Field label={c.sizes} htmlFor="sizes" hint={c.sizesHint}><input id="sizes" name="sizes" className={inputCls} /></Field>
+      <Field label={c.notes} htmlFor="notes" hint={c.notesHint}><textarea id="notes" name="notes" rows={4} className={textareaCls} /></Field>
+      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{c.invalid}</p>}
       <button type="submit" disabled={pending} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto sm:px-8">
         <Send className="size-5" />
-        {pending ? "Sending..." : "Send request"}
+        {pending ? c.sending : c.send}
       </button>
     </form>
   );

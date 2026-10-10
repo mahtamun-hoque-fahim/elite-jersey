@@ -6,7 +6,9 @@ import { JerseyArt } from "@/components/JerseyArt";
 import { ProductActions } from "@/components/ProductActions";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
-import { categoryLabels, img, money, savePercent } from "@/data/jerseys";
+import { img, money, savePercent } from "@/data/jerseys";
+import { getT } from "@/i18n/server";
+import { fmt } from "@/i18n/dictionaries";
 import { getJerseyBySlug, listJerseys, relatedFrom } from "@/lib/data/jerseys";
 
 export async function generateMetadata({ params }: PageProps<"/jersey/[slug]">): Promise<Metadata> {
@@ -20,22 +22,23 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
   const j = await getJerseyBySlug(slug);
   if (!j) notFound();
   const rel = relatedFrom(await listJerseys(), j);
+  const { t } = await getT();
 
   const save = savePercent(j);
   const specs = [
-    ["Type", categoryLabels[j.category]],
-    ["Club / Country", j.team],
-    ["Season", j.season],
-    ["Version", j.version],
-    ["Sizes available", j.sizes.join(", ")],
+    [t.product.type, t.categories[j.category]],
+    [t.product.team, j.team],
+    [t.product.season, j.season],
+    [t.product.version, j.version === "Fan" ? t.common.fan : t.common.player],
+    [t.product.sizes, j.sizes.join(", ")],
   ];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
       <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-sm text-muted">
-        <Link href="/" className="hover:text-brand">Home</Link>
+        <Link href="/" className="hover:text-brand">{t.product.home}</Link>
         <ChevronRight className="size-4" />
-        <Link href={`/shop/${j.category}`} className="hover:text-brand">{categoryLabels[j.category]}</Link>
+        <Link href={`/shop/${j.category}`} className="hover:text-brand">{t.categories[j.category]}</Link>
         <ChevronRight className="size-4" />
         <span className="text-ink">{j.team}</span>
       </nav>
@@ -43,7 +46,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
       <div className="grid gap-8 rounded-2xl border border-line bg-white p-4 sm:p-6 lg:grid-cols-2">
         <div className="relative overflow-hidden rounded-xl bg-linear-to-b from-white to-zinc-200/70">
           {save > 0 && (
-            <span className="absolute left-0 top-0 z-10 rounded-br-lg bg-brand px-3 py-1.5 text-xs font-bold text-white">SAVE {save}%</span>
+            <span className="absolute left-0 top-0 z-10 rounded-br-lg bg-brand px-3 py-1.5 text-xs font-bold text-white">{fmt(t.card.save, { n: save })}</span>
           )}
           {j.image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -72,13 +75,13 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
       </div>
 
       <section className="mt-6 rounded-2xl border border-line bg-white p-6">
-        <h2 className="font-display text-lg font-semibold">About this jersey</h2>
+        <h2 className="font-display text-lg font-semibold">{t.product.about}</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted">{j.description}</p>
-        <p className="mt-3 text-xs text-muted">Photo colors may vary slightly depending on your screen.</p>
+        <p className="mt-3 text-xs text-muted">{t.product.colorNote}</p>
       </section>
 
       <section className="mt-12">
-        <SectionHeading title="Related jerseys" href={`/shop/${j.category}`} />
+        <SectionHeading title={t.product.related} href={`/shop/${j.category}`} viewAll={t.common.viewAll} />
         <ProductGrid items={rel} className="xl:grid-cols-4" />
       </section>
     </div>

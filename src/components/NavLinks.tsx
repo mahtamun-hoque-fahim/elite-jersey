@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/client";
 
 export function NavLinks({ onNavigate, vertical }: { onNavigate?: () => void; vertical?: boolean }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   return (
     <ul className={cn("flex gap-1", vertical ? "flex-col" : "items-center justify-center gap-6")}>
       {site.nav.map((l) => {
@@ -23,7 +25,7 @@ export function NavLinks({ onNavigate, vertical }: { onNavigate?: () => void; ve
                 active ? "text-brand" : "text-ink",
               )}
             >
-              {l.label}
+              {t.nav[l.key]}
             </Link>
           </li>
         );
