@@ -19,11 +19,10 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-14 px-4 py-6">
-      <section className="relative overflow-hidden rounded-2xl bg-linear-to-br from-brand-dark via-brand to-[#4f8bff] text-white">
+      <section className="relative overflow-hidden rounded-2xl bg-linear-to-br from-brand-dark via-brand to-brand-light text-white">
         <div className="grid items-center gap-6 px-6 py-10 sm:px-10 lg:grid-cols-2 lg:py-14">
           <div className="order-2 lg:order-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">{t.home.eyebrow}</p>
-            <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+            <h1 className="font-display text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
               {t.home.title}
             </h1>
             <p className="mt-4 max-w-md text-white/85">{t.home.subtitle}</p>

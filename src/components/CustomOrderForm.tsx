@@ -54,7 +54,7 @@ export function CustomOrderForm() {
       </div>
       <Field label={c.sizes} htmlFor="sizes" hint={c.sizesHint}><input id="sizes" name="sizes" className={inputCls} /></Field>
       <Field label={c.notes} htmlFor="notes" hint={c.notesHint}><textarea id="notes" name="notes" rows={4} className={textareaCls} /></Field>
-      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{c.invalid}</p>}
+      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error === "busy" ? c.busy : c.invalid}</p>}
       <button type="submit" disabled={pending} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto sm:px-8">
         <Send className="size-5" />
         {pending ? c.sending : c.send}

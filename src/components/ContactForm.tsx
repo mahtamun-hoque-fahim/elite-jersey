@@ -29,7 +29,7 @@ export function ContactForm() {
         <Field label={c.phone} htmlFor="phone"><input id="phone" name="phone" type="tel" autoComplete="tel" className={inputCls} /></Field>
       </div>
       <Field label={c.message} htmlFor="message"><textarea id="message" name="message" rows={5} required className={textareaCls} /></Field>
-      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{c.invalid}</p>}
+      {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error === "busy" ? t.custom.busy : c.invalid}</p>}
       <button type="submit" disabled={pending} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto sm:px-8">
         <Send className="size-5" />
         {pending ? t.custom.sending : c.send}

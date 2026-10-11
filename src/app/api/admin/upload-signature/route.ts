@@ -15,9 +15,11 @@ export async function POST() {
 
   const folder = "elite-jersey";
   const timestamp = Math.floor(Date.now() / 1000);
-  const toSign = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
+  const allowedFormats = "jpg,jpeg,png,webp,avif";
+  // Cloudinary signs params in alphabetical order
+  const toSign = `allowed_formats=${allowedFormats}&folder=${folder}&timestamp=${timestamp}${apiSecret}`;
   const digest = await crypto.subtle.digest("SHA-1", new TextEncoder().encode(toSign));
   const signature = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 
-  return Response.json({ cloudName, apiKey, timestamp, folder, signature });
+  return Response.json({ cloudName, apiKey, timestamp, folder, allowedFormats, signature });
 }

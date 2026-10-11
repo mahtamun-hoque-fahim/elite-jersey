@@ -8,7 +8,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/admin">) {
   const newCount = await newSubmissionCount();
   return (
     <div className="min-h-screen md:grid md:grid-cols-[15rem_1fr]">
-      <aside className="border-b border-line bg-white p-3 md:sticky md:top-0 md:h-screen md:border-b-0 md:border-r md:p-4">
+      <aside className="border-b border-line bg-white p-3 md:sticky md:top-0 md:h-dvh md:border-b-0 md:border-r md:p-4">
         <div className="mb-3 flex items-center justify-between md:mb-6 md:block">
           <Logo />
           <p className="truncate text-xs text-muted md:mt-1">{session.user.email}</p>

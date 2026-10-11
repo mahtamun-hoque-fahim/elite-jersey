@@ -50,7 +50,7 @@ export default async function InboxPage() {
                     {digits && (
                       <>
                         <a href={`tel:+${digits}`} aria-label={`Call ${s.name}`} className="grid size-9 place-items-center rounded-lg hover:bg-bg"><Phone className="size-4" /></a>
-                        <a href={`https://wa.me/${digits}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${s.name}`} className="grid size-9 place-items-center rounded-lg text-[#1ebe5b] hover:bg-bg"><MessageCircle className="size-4" /></a>
+                        <a href={`https://wa.me/${digits}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${s.name}`} className="grid size-9 place-items-center rounded-lg text-wa-dark hover:bg-bg"><MessageCircle className="size-4" /></a>
                       </>
                     )}
                     <ConfirmForm action={setSubmissionStatus} fields={{ id: s.id, status: s.status === "new" ? "handled" : "new" }}>

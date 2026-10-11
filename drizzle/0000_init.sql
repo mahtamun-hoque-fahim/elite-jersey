@@ -34,6 +34,13 @@ CREATE TABLE "jerseys" (
 	CONSTRAINT "jerseys_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
+CREATE TABLE "rate_limit" (
+	"id" text PRIMARY KEY NOT NULL,
+	"key" text NOT NULL,
+	"count" integer NOT NULL,
+	"last_request" bigint NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "session" (
 	"id" text PRIMARY KEY NOT NULL,
 	"expires_at" timestamp NOT NULL,

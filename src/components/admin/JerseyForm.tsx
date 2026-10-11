@@ -32,6 +32,7 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
       body.append("api_key", sig.apiKey);
       body.append("timestamp", String(sig.timestamp));
       body.append("folder", sig.folder);
+      body.append("allowed_formats", sig.allowedFormats);
       body.append("signature", sig.signature);
       const up = await fetch(`https://api.cloudinary.com/v1_1/${sig.cloudName}/image/upload`, { method: "POST", body });
       const data = await up.json();

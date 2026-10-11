@@ -14,7 +14,7 @@ const en = {
   },
   card: { buyNow: "Buy Now", details: "Details", stockOut: "Stock Out", save: "SAVE {n}%", new: "NEW" },
   home: {
-    eyebrow: "Football jerseys", title: "Premium quality jerseys, delivered to you.",
+title: "Premium quality jerseys, delivered to you.",
     subtitle: "Club, country, retro and custom kits. Pick a jersey and order directly on WhatsApp.",
     browse: "Browse collection", customKit: "Order a custom kit",
     newArrivals: "New Arrivals", club: "Club Jerseys", country: "Country Jerseys", retroSpecial: "Retro and Special Editions",
@@ -48,6 +48,7 @@ const en = {
     half: "Half sleeve", full: "Full sleeve", polo: "Polo collar", deadline: "Deadline", sizes: "Sizes needed", sizesHint: "Example: 5 M, 5 L, 2 XL",
     notes: "Notes", notesHint: "Colors, names, numbers, sponsors. You can send design files on WhatsApp.", send: "Send request", sending: "Sending...",
     invalid: "Please fill in team name, contact person, phone and quantity.",
+    busy: "We are getting a lot of messages right now. Please message us on WhatsApp instead.",
   },
   contactPage: {
     title: "Contact us", subtitle: "Questions about a jersey, size or delivery? Send us a message.", reach: "Reach us directly",
@@ -77,7 +78,7 @@ const bn: Dict = {
   },
   card: { buyNow: "কিনুন", details: "বিস্তারিত", stockOut: "স্টক শেষ", save: "{n}% ছাড়", new: "নতুন" },
   home: {
-    eyebrow: "ফুটবল জার্সি", title: "প্রিমিয়াম কোয়ালিটির জার্সি, আপনার দরজায়।",
+title: "প্রিমিয়াম কোয়ালিটির জার্সি, আপনার দরজায়।",
     subtitle: "ক্লাব, দেশ, রেট্রো ও কাস্টম কিট। জার্সি বেছে নিন আর সরাসরি হোয়াটসঅ্যাপে অর্ডার করুন।",
     browse: "কালেকশন দেখুন", customKit: "কাস্টম কিট অর্ডার করুন",
     newArrivals: "নতুন এসেছে", club: "ক্লাব জার্সি", country: "কান্ট্রি জার্সি", retroSpecial: "রেট্রো ও স্পেশাল এডিশন",
@@ -111,6 +112,7 @@ const bn: Dict = {
     half: "হাফ স্লিভ", full: "ফুল স্লিভ", polo: "পোলো কলার", deadline: "ডেডলাইন", sizes: "কোন সাইজ কতটি", sizesHint: "যেমন: ৫টি M, ৫টি L, ২টি XL",
     notes: "নোট", notesHint: "রঙ, নাম, নম্বর, স্পনসর। ডিজাইন ফাইল হোয়াটসঅ্যাপে পাঠাতে পারেন।", send: "অনুরোধ পাঠান", sending: "পাঠানো হচ্ছে...",
     invalid: "টিমের নাম, যোগাযোগকারীর নাম, ফোন ও পরিমাণ লিখুন।",
+    busy: "এই মুহূর্তে অনেক মেসেজ আসছে। অনুগ্রহ করে হোয়াটসঅ্যাপে মেসেজ করুন।",
   },
   contactPage: {
     title: "যোগাযোগ করুন", subtitle: "জার্সি, সাইজ বা ডেলিভারি নিয়ে প্রশ্ন আছে? আমাদের মেসেজ করুন।", reach: "সরাসরি যোগাযোগ",

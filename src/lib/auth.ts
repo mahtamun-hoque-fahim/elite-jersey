@@ -13,6 +13,14 @@ export const auth = betterAuth({
     autoSignIn: false, // creating an admin must never swap the current admin's session
     minPasswordLength: 10,
   },
+  rateLimit: {
+    enabled: true,
+    storage: "database",
+    window: 60,
+    max: 60,
+    customRules: { "/sign-in/email": { window: 60, max: 5 } },
+  },
+  advanced: { ipAddress: { ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for"] } },
   session: {
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
