@@ -7,7 +7,7 @@ Layout reference: jersey.com.bd (clean, minimal, white cards on light grey). Str
 - Ink #0b0b0c, muted #6b6b70
 - Brand (primary blue, temporary until a CTA color is chosen): #2563eb, hover #1d4ed8, tint #eaf1ff
 - WhatsApp green #25d366, used only for WhatsApp buttons
-- Logo is black and white (text wordmark in src/components/Logo.tsx until the real logo is supplied)
+- Logo: black SVG wordmark at public/logo.svg (also src/app/icon.svg as the favicon), rendered by src/components/Logo.tsx
 
 ## Type
 - Display: Poppins 500/600/700. Body: Open Sans Variable. Both via @fontsource.

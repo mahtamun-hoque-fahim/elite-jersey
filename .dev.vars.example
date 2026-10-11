@@ -1,0 +1,8 @@
+# Local Cloudflare preview (npm run preview). Copy to .dev.vars. Production secrets: wrangler secret put NAME
+DATABASE_URL=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:8787
+ADMIN_SETUP_KEY=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=

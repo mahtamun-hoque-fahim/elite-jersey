@@ -25,3 +25,20 @@ npm run dev
 - Jersey photos upload straight from the browser to Cloudinary with a signed request (`/api/admin/upload-signature`).
 - Public pages render per request, so dashboard edits show immediately.
 - No emojis. Icons are lucide-react, plus hand-rolled Facebook and Instagram SVGs.
+
+## Deploy: Cloudflare Workers (OpenNext)
+```bash
+npm run preview   # builds with OpenNext and runs the Worker locally (copy .dev.vars.example to .dev.vars first)
+npm run deploy    # builds and deploys with wrangler (run `npx wrangler login` once)
+```
+- Config: `wrangler.jsonc`, `open-next.config.ts`. `nodejs_compat` is required. There is no ISR, so no KV or R2 binding is needed.
+- Secrets (set on Cloudflare, not in the repo): `npx wrangler secret put DATABASE_URL`, then the same for `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ADMIN_SETUP_KEY`, `CLOUDINARY_API_SECRET`.
+- `NEXT_PUBLIC_*` values and `DEPLOY_TARGET=cloudflare` must exist at build time. In Workers Builds, add them as build variables.
+- Keep the same env vars on Vercel and Cloudflare, or you get "works on one, broken on the other".
+- If you deploy with Workers Builds (git), set the build command to `npm run deploy` or `npx opennextjs-cloudflare build` and the deploy command to `npx opennextjs-cloudflare deploy`.
+
+## Deploy: Vercel
+Import the repo, add the same env vars, deploy. No extra config.
+
+## Version pin
+`next` is pinned to exactly `16.3.8`. Next 16.4.0 makes every route return 500 on Cloudflare with `@opennextjs/cloudflare` 1.20.10 (`Unexpected loadManifest(preview-props.json)`, upstream issue opennextjs-cloudflare#1355). Upgrade Next only after OpenNext ships the fix, and run `npm run preview` before deploying.
