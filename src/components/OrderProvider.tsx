@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check, Download, MessageCircle, X } from "lucide-react";
-import { JerseyArt } from "./JerseyArt";
+import { PhotoPlaceholder } from "./PhotoPlaceholder";
 import { cn } from "@/lib/cn";
 import { img, money, type Jersey } from "@/data/jerseys";
 import { waLink } from "@/lib/site";
@@ -15,30 +15,6 @@ export function useOrder() {
   const ctx = useContext(OrderContext);
   if (!ctx) throw new Error("useOrder must be used inside OrderProvider");
   return ctx;
-}
-
-function svgToPngBlob(svg: SVGSVGElement): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    clone.setAttribute("width", "1000");
-    clone.setAttribute("height", "1000");
-    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml" }));
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1000;
-      canvas.height = 1000;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return reject(new Error("canvas"));
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, 1000, 1000);
-      ctx.drawImage(img, 0, 0, 1000, 1000);
-      URL.revokeObjectURL(url);
-      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("blob"))), "image/png");
-    };
-    img.onerror = () => reject(new Error("img"));
-    img.src = url;
-  });
 }
 
 function saveBlob(blob: Blob, filename: string) {
@@ -59,7 +35,6 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const [downloaded, setDownloaded] = useState(false);
   const [busy, setBusy] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const artRef = useRef<HTMLDivElement>(null);
 
   const open = useCallback((j: Jersey, s?: string) => {
     setJersey(j);
@@ -75,26 +50,25 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   }, [jersey]);
 
   async function download() {
-    if (!jersey) return;
+    if (!jersey?.image) return;
     setBusy(true);
     try {
-      if (jersey.image) {
-        const res = await fetch(img(jersey.image, "f_jpg,q_90,w_1200") ?? jersey.image);
-        const blob = await res.blob();
-        const ext = blob.type.split("/")[1]?.replace("jpeg", "jpg") || "jpg";
-        saveBlob(blob, `${jersey.slug}.${ext}`);
-      } else {
-        const svg = artRef.current?.querySelector("svg");
-        if (svg) saveBlob(await svgToPngBlob(svg), `${jersey.slug}.png`);
-      }
+      const res = await fetch(img(jersey.image, "f_jpg,q_90,w_1200") ?? jersey.image);
+      const blob = await res.blob();
+      const ext = blob.type.split("/")[1]?.replace("jpeg", "jpg").replace("svg+xml", "svg") || "jpg";
+      saveBlob(blob, `${jersey.slug}.${ext}`);
       setDownloaded(true);
     } finally {
       setBusy(false);
     }
   }
 
+  const hasPhoto = Boolean(jersey?.image);
+  // Without a photo there is nothing to download, so WhatsApp is available straight away.
+  const ready = hasPhoto ? downloaded : true;
+
   const message = jersey
-    ? `Hi Elite Jersey, I want to order this jersey.\n\n${jersey.name}\nSize: ${size || "(please confirm)"}\nPrice: ${money(jersey.price)}\nLink: ${typeof window !== "undefined" ? window.location.origin : ""}/jersey/${jersey.slug}\n\nI have attached the photo.`
+    ? `Hi Elite Jersey, I want to order this jersey.\n\n${jersey.name}\nSize: ${size || "(please confirm)"}\nPrice: ${money(jersey.price)}\nLink: ${typeof window !== "undefined" ? window.location.origin : ""}/jersey/${jersey.slug}${jersey.image ? "\n\nI have attached the photo." : ""}`
     : "";
 
   return (
@@ -124,12 +98,12 @@ export function OrderProvider({ children }: { children: ReactNode }) {
             </h2>
 
             <div className="mt-4 flex gap-4 rounded-xl bg-bg p-3">
-              <div ref={artRef} className="size-24 shrink-0 rounded-lg bg-white">
+              <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white">
                 {jersey.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={img(jersey.image, "f_auto,q_auto,w_200")} alt={jersey.name} className="size-full rounded-lg object-cover" />
+                  <img src={img(jersey.image, "f_auto,q_auto,w_200")} alt={jersey.name} className="size-full object-contain" />
                 ) : (
-                  <JerseyArt colors={jersey.colors} pattern={jersey.pattern} title={jersey.name} className="size-full" />
+                  <PhotoPlaceholder label={t.common.photoSoon} compact />
                 )}
               </div>
               <div className="min-w-0">
@@ -158,31 +132,37 @@ export function OrderProvider({ children }: { children: ReactNode }) {
               </div>
             </fieldset>
 
-            <ol className="mt-5 space-y-2 text-sm text-muted">
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">1</span>{t.order.s1}</li>
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">2</span>{t.order.s2}</li>
-              <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">3</span>{t.order.s3}</li>
-            </ol>
+            {hasPhoto ? (
+              <ol className="mt-5 space-y-2 text-sm text-muted">
+                <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">1</span>{t.order.s1}</li>
+                <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">2</span>{t.order.s2}</li>
+                <li className="flex gap-3"><span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-tint text-xs font-bold text-brand">3</span>{t.order.s3}</li>
+              </ol>
+            ) : (
+              <p className="mt-5 rounded-lg bg-brand-tint p-3 text-sm text-muted">{t.order.noPhoto}</p>
+            )}
 
             <div className="mt-5 space-y-2.5">
-              <button
-                type="button"
-                onClick={download}
-                disabled={busy}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
-              >
-                {downloaded ? <Check className="size-5" /> : <Download className="size-5" />}
-                {downloaded ? t.order.downloaded : busy ? t.order.preparing : t.order.download}
-              </button>
+              {hasPhoto && (
+                <button
+                  type="button"
+                  onClick={download}
+                  disabled={busy}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
+                >
+                  {downloaded ? <Check className="size-5" /> : <Download className="size-5" />}
+                  {downloaded ? t.order.downloaded : busy ? t.order.preparing : t.order.download}
+                </button>
+              )}
               <a
-                href={downloaded ? waLink(message) : undefined}
+                href={ready ? waLink(message) : undefined}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-disabled={!downloaded}
-                tabIndex={downloaded ? 0 : -1}
+                aria-disabled={!ready}
+                tabIndex={ready ? 0 : -1}
                 className={cn(
                   "flex h-12 w-full items-center justify-center gap-2 rounded-xl font-semibold text-white transition-colors",
-                  downloaded ? "bg-wa hover:bg-wa-dark" : "pointer-events-none bg-wa/40",
+                  ready ? "bg-wa hover:bg-wa-dark" : "pointer-events-none bg-wa/40",
                 )}
               >
                 <MessageCircle className="size-5" />

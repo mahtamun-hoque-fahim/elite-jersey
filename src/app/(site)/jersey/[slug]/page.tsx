@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check, ChevronRight } from "lucide-react";
-import { JerseyArt } from "@/components/JerseyArt";
+import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { ProductActions } from "@/components/ProductActions";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -50,9 +50,9 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
           )}
           {j.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={img(j.image, "f_auto,q_auto,w_1000")} alt={j.name} className="aspect-square w-full object-cover" />
+            <img src={img(j.image, "f_auto,q_auto,w_1000")} alt={j.name} className="aspect-square w-full object-contain" />
           ) : (
-            <JerseyArt colors={j.colors} pattern={j.pattern} title={j.name} className="aspect-square w-full p-8" />
+            <PhotoPlaceholder label={t.common.photoSoon} className="aspect-square" />
           )}
         </div>
 

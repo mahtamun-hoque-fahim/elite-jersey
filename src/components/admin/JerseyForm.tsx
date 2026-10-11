@@ -56,9 +56,9 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
           <div className="grid aspect-square place-items-center overflow-hidden rounded-xl border border-dashed border-line bg-bg">
             {imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={img(imageUrl, "f_auto,q_auto,w_500")} alt="Jersey preview" className="size-full object-cover" />
+              <img src={img(imageUrl, "f_auto,q_auto,w_500")} alt="Jersey preview" className="size-full object-contain" />
             ) : (
-              <span className="px-4 text-center text-xs text-muted">No photo yet</span>
+              <span className="px-4 text-center text-xs text-muted">No photo yet. The site shows a placeholder until you upload one.</span>
             )}
           </div>
           <label className="mt-2 inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-brand text-sm font-semibold text-brand hover:bg-brand-tint">
@@ -66,6 +66,7 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
             {uploading ? "Uploading..." : imageUrl ? "Replace photo" : "Upload photo"}
             <input type="file" accept="image/*" onChange={onFile} disabled={uploading} className="sr-only" />
           </label>
+          <p className="mt-2 text-xs text-muted">Square photo, at least 1000 px, light or white background. JPG, PNG, WebP or AVIF, up to 10 MB.</p>
           {uploadError && <p role="alert" className="mt-2 text-xs font-medium text-red-600">{uploadError}</p>}
         </div>
 

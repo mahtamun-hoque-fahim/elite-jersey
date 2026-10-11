@@ -46,6 +46,16 @@ CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET
 ```
 
+## Cloudinary (jersey photos)
+
+1. Create a free account at cloudinary.com
+2. In the Cloudinary dashboard open Settings, then API Keys, and copy the Cloud name, API Key and API Secret
+3. Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` (locally and on Vercel / Cloudflare), then redeploy
+4. Open `/admin`: the Overview page checks the keys against Cloudinary and shows connected, rejected or missing
+5. Add or edit a jersey and upload a square photo (at least 1000 px). Uploads go straight from the browser to the `elite-jersey` folder, signed by `/api/admin/upload-signature`
+
+Until a photo is uploaded, a jersey shows a "Photo coming soon" placeholder.
+
 ## Scripts
 
 ```bash

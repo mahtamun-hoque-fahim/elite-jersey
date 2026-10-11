@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Download, MessageCircle, MousePointerClick } from "lucide-react";
-import { JerseyArt } from "@/components/JerseyArt";
+import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
+import { cn } from "@/lib/cn";
 import { img } from "@/data/jerseys";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -10,8 +11,7 @@ import { getT } from "@/i18n/server";
 export default async function HomePage() {
   const { t } = await getT();
   const all = await listJerseys();
-  const heroPick = all.slice(0, 3);
-  const hero = [heroPick[1], heroPick[0], heroPick[2]].filter(Boolean);
+  const hero = [all[1], all[0], all[2]]; // three slots; missing jerseys show the placeholder
   const latest = all.slice(0, 10);
   const club = all.filter((j) => j.category === "club").slice(0, 10);
   const country = all.filter((j) => j.category === "national").slice(0, 10);
@@ -35,26 +35,23 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="relative order-1 mx-auto flex w-full max-w-md items-end justify-center lg:order-2">
-            {hero.map((j, i) =>
-              j.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={j.id}
-                  src={img(j.image, "f_auto,q_auto,w_500")}
-                  alt={j.name}
-                  className={i === 1 ? "relative z-10 -mx-6 w-1/2 rounded-xl bg-white object-cover shadow-xl" : "w-2/5 rounded-xl bg-white object-cover shadow-lg"}
-                />
-              ) : (
-                <JerseyArt
-                  key={j.id}
-                  colors={j.colors}
-                  pattern={j.pattern}
-                  title={j.name}
-                  className={i === 1 ? "relative z-10 -mx-6 w-1/2 drop-shadow-xl" : "w-2/5 drop-shadow-lg"}
-                />
-              ),
-            )}
+          <div className="relative order-1 mx-auto flex w-full max-w-md items-center justify-center lg:order-2">
+            {hero.map((j, i) => (
+              <div
+                key={j?.id ?? i}
+                className={cn(
+                  "aspect-square overflow-hidden rounded-2xl bg-white",
+                  i === 1 ? "relative z-10 -mx-5 w-1/2 shadow-xl" : "w-2/5 shadow-lg",
+                )}
+              >
+                {j?.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={img(j.image, "f_auto,q_auto,w_500")} alt={j.name} className="size-full object-contain" />
+                ) : (
+                  <PhotoPlaceholder label={t.common.photoSoon} compact />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

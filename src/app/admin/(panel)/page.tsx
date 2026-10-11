@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { Inbox, Plus, Shirt, Users } from "lucide-react";
+import { CircleAlert, CircleCheck, Inbox, Plus, Shirt, Users } from "lucide-react";
 import { requireAdmin } from "@/lib/auth/session";
+import { cloudinaryStatus, type CloudinaryStatus } from "@/lib/cloudinary";
 import { adminListJerseys } from "@/lib/data/jerseys";
 import { adminCount, listSubmissions } from "@/lib/data/submissions";
 
 export default async function OverviewPage() {
   await requireAdmin();
-  const [list, subs, admins] = await Promise.all([adminListJerseys(), listSubmissions(), adminCount()]);
+  const [list, subs, admins, cloud] = await Promise.all([adminListJerseys(), listSubmissions(), adminCount(), cloudinaryStatus()]);
   const inStock = list.filter((j) => j.inStock).length;
   const fresh = subs.filter((s) => s.status === "new");
 
@@ -36,6 +37,8 @@ export default async function OverviewPage() {
         ))}
       </div>
 
+      <CloudinaryCard status={cloud} />
+
       <section className="rounded-xl border border-line bg-white p-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-base font-semibold">Latest requests</h2>
@@ -58,5 +61,34 @@ export default async function OverviewPage() {
         )}
       </section>
     </div>
+  );
+}
+
+const cloudCopy: Record<CloudinaryStatus, { title: string; text: string; ok: boolean }> = {
+  ok: { title: "Photo uploads are connected", text: "Cloudinary accepted your keys. You can upload jersey photos.", ok: true },
+  missing: {
+    title: "Photo uploads are not set up yet",
+    text: "Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET to your environment variables, then redeploy. Jerseys show a placeholder until a photo is uploaded.",
+    ok: false,
+  },
+  invalid: {
+    title: "Cloudinary rejected the keys",
+    text: "Check that the cloud name, API key and API secret belong to the same Cloudinary account (Cloudinary dashboard, Settings, API Keys).",
+    ok: false,
+  },
+  unreachable: { title: "Could not reach Cloudinary", text: "The check timed out. Reload the page, and if it keeps happening check your connection.", ok: false },
+};
+
+function CloudinaryCard({ status }: { status: CloudinaryStatus }) {
+  const c = cloudCopy[status];
+  const Icon = c.ok ? CircleCheck : CircleAlert;
+  return (
+    <section className="flex gap-3 rounded-xl border border-line bg-white p-5">
+      <Icon className={c.ok ? "mt-0.5 size-5 shrink-0 text-brand" : "mt-0.5 size-5 shrink-0 text-amber-600"} />
+      <div>
+        <h2 className="font-display text-base font-semibold">{c.title}</h2>
+        <p className="mt-1 text-sm text-muted">{c.text}</p>
+      </div>
+    </section>
   );
 }

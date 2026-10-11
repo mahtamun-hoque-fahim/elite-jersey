@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { JerseyArt } from "./JerseyArt";
+import { PhotoPlaceholder } from "./PhotoPlaceholder";
 import { useOrder } from "./OrderProvider";
 import { img, money, savePercent, type Jersey } from "@/data/jerseys";
 import { useI18n } from "@/i18n/client";
@@ -23,9 +23,9 @@ export function ProductCard({ jersey }: { jersey: Jersey }) {
         )}
         {jersey.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={img(jersey.image)} alt={jersey.name} loading="lazy" className="aspect-square w-full object-cover" />
+          <img src={img(jersey.image)} alt={jersey.name} loading="lazy" className="aspect-square w-full object-contain" />
         ) : (
-          <JerseyArt colors={jersey.colors} pattern={jersey.pattern} title={jersey.name} className="aspect-square w-full p-3 transition-transform duration-300 ease-subtle group-hover:scale-105" />
+          <PhotoPlaceholder label={t.common.photoSoon} className="aspect-square" />
         )}
       </Link>
 

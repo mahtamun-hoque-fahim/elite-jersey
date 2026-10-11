@@ -14,9 +14,9 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
 
 ## Current State
 
-- Updated: 2026-10-11
+- Updated: 2026-10-12
 - Status: Feature complete, waiting on env vars and first deploy
-- Works: storefront (home, shop with filters, category and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
+- Works: photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, category and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
 - In progress: nothing half-built
 - Next: fill env vars and run `drizzle/0000_init.sql` in Neon, create the first admin, add real jerseys, `npm run preview`, deploy to Vercel and Cloudflare
 - Watch out:
@@ -68,6 +68,11 @@ Execute automatically at the start of every session, before the first commit —
 - Public forms have a honeypot field and a site-wide flood guard (20 stored messages per 10 minutes)
 
 ## Session Log
+
+### 2026-10-12
+- Did: Replaced the drawn SVG jerseys with a neutral PhotoPlaceholder everywhere a photo goes (cards, product page, hero tiles, order popup, admin list); removed `JerseyArt` and the color/pattern fields from the data model. Order popup now only downloads real photos (no-photo jerseys skip straight to WhatsApp). Added a Cloudinary connection check (ping with the three env keys) to the dashboard Overview, upload hints and clearer errors, README Cloudinary steps. Verified the upload signature algorithm against Cloudinary's documented example
+- Decided: no fake or drawn product images; a missing photo is shown honestly as "Photo coming soon"
+- Next: unchanged (env vars, Neon SQL, first admin, real jerseys with photos, preview and deploy)
 
 ### 2026-10-11
 - Did: Built the whole project from scratch: storefront from the jersey.com.bd reference screenshots, Buy Now popup with photo download and WhatsApp handoff, admin dashboard (Better Auth, Neon/Drizzle, Cloudinary), English / Bengali toggle, real logo, Cloudflare Workers config, security and quality pass, docs sync. Pushed to `main`

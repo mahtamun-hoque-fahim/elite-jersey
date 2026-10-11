@@ -6,7 +6,7 @@ const en = {
   common: {
     searchPlaceholder: "Search jerseys...", searchLabel: "Search jerseys", search: "Search", whatsapp: "WhatsApp", customOrder: "Custom Order",
     openMenu: "Open menu", closeMenu: "Close menu", viewAll: "View all items", chatWhatsapp: "Chat on WhatsApp",
-    switchTo: "Switch to Bengali", toggleLabel: "বাং", player: "Player", fan: "Fan",
+    switchTo: "Switch to Bengali", toggleLabel: "বাং", player: "Player", fan: "Fan", photoSoon: "Photo coming soon",
   },
   footer: {
     tagline: "Premium football jerseys. Club, country, retro and custom kits.", shop: "Shop", company: "Company", contact: "Contact",
@@ -40,6 +40,7 @@ title: "Premium quality jerseys, delivered to you.",
     title: "Order on WhatsApp", selectSize: "Select size", s1: "Download the jersey photo.", s2: "Open WhatsApp with your order message.", s3: "Attach the photo and send. We confirm the rest there.",
     download: "Download Photo", downloaded: "Photo downloaded", preparing: "Preparing...", cont: "Continue to WhatsApp",
     note: "We confirm price, delivery and payment on WhatsApp.",
+    noPhoto: "This jersey has no photo yet. Continue to WhatsApp and we will send you one.",
   },
   custom: {
     title: "Custom kits for your team", subtitle: "Tell us about your team and what you need. We reply on WhatsApp with the design and price.",
@@ -70,7 +71,7 @@ const bn: Dict = {
   common: {
     searchPlaceholder: "জার্সি খুঁজুন...", searchLabel: "জার্সি খুঁজুন", search: "খুঁজুন", whatsapp: "হোয়াটসঅ্যাপ", customOrder: "কাস্টম অর্ডার",
     openMenu: "মেনু খুলুন", closeMenu: "মেনু বন্ধ করুন", viewAll: "সব দেখুন", chatWhatsapp: "হোয়াটসঅ্যাপে চ্যাট করুন",
-    switchTo: "Switch to English", toggleLabel: "EN", player: "প্লেয়ার", fan: "ফ্যান",
+    switchTo: "Switch to English", toggleLabel: "EN", player: "প্লেয়ার", fan: "ফ্যান", photoSoon: "ছবি শিগগিরই আসছে",
   },
   footer: {
     tagline: "প্রিমিয়াম ফুটবল জার্সি। ক্লাব, দেশ, রেট্রো ও কাস্টম কিট।", shop: "শপ", company: "কোম্পানি", contact: "যোগাযোগ",
@@ -104,6 +105,7 @@ title: "প্রিমিয়াম কোয়ালিটির জার�
     title: "হোয়াটসঅ্যাপে অর্ডার করুন", selectSize: "সাইজ বেছে নিন", s1: "জার্সির ছবি ডাউনলোড করুন।", s2: "অর্ডার মেসেজসহ হোয়াটসঅ্যাপ খুলুন।", s3: "ছবিটি অ্যাটাচ করে পাঠান। বাকিটা সেখানেই কনফার্ম করব।",
     download: "ছবি ডাউনলোড করুন", downloaded: "ছবি ডাউনলোড হয়েছে", preparing: "প্রস্তুত হচ্ছে...", cont: "হোয়াটসঅ্যাপে যান",
     note: "দাম, ডেলিভারি ও পেমেন্ট আমরা হোয়াটসঅ্যাপে কনফার্ম করি।",
+    noPhoto: "এই জার্সির ছবি এখনো যোগ হয়নি। হোয়াটসঅ্যাপে যান, আমরা ছবি পাঠিয়ে দেব।",
   },
   custom: {
     title: "আপনার টিমের জন্য কাস্টম কিট", subtitle: "আপনার টিম ও প্রয়োজনের কথা জানান। আমরা হোয়াটসঅ্যাপে ডিজাইন ও দাম জানিয়ে দেব।",

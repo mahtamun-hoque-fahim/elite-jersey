@@ -80,6 +80,9 @@ Textarea uses the same classes with `py-2.5` and no fixed height. Shared in `src
 ### Product card
 White card, `border-line`, `p-3`. Image on `bg-linear-to-b from-white to-zinc-200/70`, square. Blue badge top-right (`SAVE n%` or `NEW`). Title 2 lines, centered. Price bold with struck old price. Buttons: Buy Now (primary) + Details (outline). Stock out replaces buttons with a bordered `Stock Out` box.
 
+### Photo placeholder
+`src/components/PhotoPlaceholder.tsx`. Fills its parent (`size-full`), `bg-linear-to-b from-white to-zinc-200/70`, white circle with a lucide image icon (`size-14`, `size-8` when `compact`) and a `text-xs text-muted` label. Same box as a photo, so nothing shifts when a real image arrives. Used in cards, product page, home hero tiles, order popup thumbnail and the admin jersey list (compact).
+
 ### Badge
 ```tsx
 <span className="absolute right-0 top-0 rounded-bl-lg bg-brand px-2 py-1 text-[11px] font-bold tracking-wide text-white">SAVE 21%</span>
@@ -92,7 +95,7 @@ White card, `border-line`, `p-3`. Image on `bg-linear-to-b from-white to-zinc-20
 Poppins 600, blue `h-0.5 w-10` underline, "View all items" link on the right in `text-xs uppercase text-brand`.
 
 ### Buy Now popup (OrderProvider)
-Native `<dialog>`; centered `max-w-md`, bottom sheet on mobile. Jersey summary, size pills, 3 numbered steps, Download Photo (primary), Continue to WhatsApp (locked until downloaded), note line.
+Native `<dialog>`; centered `max-w-md`, bottom sheet on mobile. Jersey summary, size pills, 3 numbered steps, Download Photo (primary), Continue to WhatsApp (locked until downloaded), note line. A jersey with no photo skips the steps and the download button, shows a short notice, and Continue to WhatsApp is enabled immediately.
 
 ### Shop filters
 Left sidebar `17rem` on desktop with collapsible groups (blue underline titles); bottom sheet on mobile. 4-column grid on desktop, 2 columns on mobile, 12 per page.
@@ -121,5 +124,5 @@ Light only. Dark mode is not planned.
 
 - No emojis. Icons are lucide-react, plus hand-rolled Facebook and Instagram SVGs (not in lucide).
 - No cart, login, wishlist or checkout on the storefront.
-- Jersey photos are Cloudinary URLs with transforms (`f_auto,q_auto,w_*`) in plain `<img>` (Cloudflare has no image optimizer). Jerseys without a photo show the `JerseyArt` SVG placeholder.
+- Jersey photos are Cloudinary URLs with transforms (`f_auto,q_auto,w_*`) in plain `<img>` with `object-contain` (Cloudflare has no image optimizer). Jerseys without a photo show `PhotoPlaceholder` (square, grey gradient, image icon, "Photo coming soon"); there is no drawn jersey art anywhere.
 - All UI strings live in `src/i18n/dictionaries.ts` (en and bn); add both languages for every new string.

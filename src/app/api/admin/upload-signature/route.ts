@@ -10,7 +10,7 @@ export async function POST() {
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
   if (!cloudName || !apiKey || !apiSecret) {
-    return Response.json({ error: "Cloudinary is not configured yet." }, { status: 503 });
+    return Response.json({ error: "Photo uploads are not set up yet. Add the three CLOUDINARY_* variables to your environment." }, { status: 503 });
   }
 
   const folder = "elite-jersey";

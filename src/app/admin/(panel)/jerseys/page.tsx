@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { ConfirmForm } from "@/components/admin/ConfirmForm";
-import { JerseyArt } from "@/components/JerseyArt";
+import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { deleteJersey, toggleStock } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/auth/session";
 import { adminListJerseys } from "@/lib/data/jerseys";
@@ -49,9 +49,9 @@ export default async function JerseysAdminPage() {
                       <div className="size-12 shrink-0 overflow-hidden rounded-lg bg-bg">
                         {j.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={img(j.image, "f_auto,q_auto,w_120")} alt="" className="size-full object-cover" />
+                          <img src={img(j.image, "f_auto,q_auto,w_120")} alt="" className="size-full object-contain" />
                         ) : (
-                          <JerseyArt colors={j.colors} pattern={j.pattern} className="size-full p-1" />
+                          <PhotoPlaceholder label="No photo" compact />
                         )}
                       </div>
                       <div className="min-w-0">

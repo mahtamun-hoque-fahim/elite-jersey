@@ -3,7 +3,7 @@ import { connection } from "next/server";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { jerseys as jerseysTable } from "@/lib/db/schema";
-import { NEUTRAL_COLORS, seedJerseys, type Category, type Jersey } from "@/data/jerseys";
+import { seedJerseys, type Category, type Jersey } from "@/data/jerseys";
 
 type Row = typeof jerseysTable.$inferSelect;
 
@@ -21,8 +21,6 @@ export function toJersey(r: Row): Jersey {
     sizes: r.sizes,
     inStock: r.inStock,
     isNew: r.isNew,
-    colors: NEUTRAL_COLORS,
-    pattern: "solid",
     image: r.imageUrl ?? undefined,
     description: r.description,
   };
