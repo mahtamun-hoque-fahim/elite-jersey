@@ -1,44 +1,85 @@
 # Elite Jersey
 
-Football jersey catalog. Visitors browse jerseys, tap Buy Now, download the photo and continue to WhatsApp. Custom order and contact forms land in the admin dashboard inbox.
+Football jersey catalog: browse, tap Buy Now, download the photo, continue on WhatsApp. Admin dashboard for jerseys and messages.
 
-Stack: Next.js 16 (App Router), TypeScript, Tailwind v4, Neon + Drizzle (neon-http), Better Auth, Cloudinary, lucide-react. Dual deploy: Vercel and Cloudflare (OpenNext).
+## Stack
 
-## Run locally
-```bash
-npm install
-cp .env.example .env.local   # fill in later; the site shows sample jerseys until DATABASE_URL is set
-npm run dev
+- Next.js 16.3.8 (App Router, pinned) + TypeScript
+- Tailwind CSS v4
+- Neon (PostgreSQL) + Drizzle ORM (`neon-http`)
+- Better Auth (admin only)
+- Cloudinary (signed browser uploads)
+- Vercel + Cloudflare Workers via OpenNext
+
+## Prerequisites
+
+- Node 20.9+ (22 recommended)
+- A Neon project (pooled connection string; unpooled only for drizzle-kit)
+- A Cloudinary account
+
+## Local setup
+
+1. Clone the repo: `git clone https://github.com/mahtamun-hoque-fahim/elite-jersey`
+2. Install: `npm install`
+3. Copy `.env.example` to `.env.local` and fill in values (see PLANNER.md → Env Vars). Without `DATABASE_URL` the site shows sample jerseys.
+4. Create tables: paste `drizzle/0000_init.sql` into the Neon SQL editor and run it
+5. Run dev: `npm run dev`
+6. Create the first admin at `/admin/setup` (needs `ADMIN_SETUP_KEY`), then remove that variable
+
+## Env vars
+
+See PLANNER.md → Env Vars for descriptions. Names only (exactly the names in `.env.example`):
+
+```
+NEXT_PUBLIC_WHATSAPP_NUMBER
+NEXT_PUBLIC_PHONE
+NEXT_PUBLIC_ADDRESS
+NEXT_PUBLIC_FACEBOOK_URL
+NEXT_PUBLIC_INSTAGRAM_URL
+DATABASE_URL
+DATABASE_URL_UNPOOLED
+BETTER_AUTH_SECRET
+BETTER_AUTH_URL
+ADMIN_SETUP_KEY
+CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET
 ```
 
-## Setup checklist (when you fill in env)
-1. Create a Neon project. Paste `drizzle/0000_init.sql` into the Neon SQL editor and run it.
-2. Set `DATABASE_URL` (pooled), `BETTER_AUTH_SECRET` (long random string), `BETTER_AUTH_URL` (your site URL), `ADMIN_SETUP_KEY` (any secret).
-3. Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`.
-4. Set `NEXT_PUBLIC_WHATSAPP_NUMBER` (digits only, with country code, for example 8801XXXXXXXXX) plus optional phone, address, Facebook and Instagram URLs.
-5. Open `/admin/setup`, enter the setup key and create the first admin. Then remove `ADMIN_SETUP_KEY`.
-6. Log in at `/admin/login`, add jerseys. More admins: Dashboard, Admins.
+## Scripts
 
-## Notes
-- Public sign-up is blocked in `src/app/api/auth/[...all]/route.ts`. Admins are created from the dashboard only.
-- Auth is validated in `requireAdmin()` (`src/lib/auth/session.ts`). `src/proxy.ts` is only a fast redirect.
-- Jersey photos upload straight from the browser to Cloudinary with a signed request (`/api/admin/upload-signature`).
-- Public pages render per request, so dashboard edits show immediately.
-- No emojis. Icons are lucide-react, plus hand-rolled Facebook and Instagram SVGs.
-
-## Deploy: Cloudflare Workers (OpenNext)
 ```bash
-npm run preview   # builds with OpenNext and runs the Worker locally (copy .dev.vars.example to .dev.vars first)
-npm run deploy    # builds and deploys with wrangler (run `npx wrangler login` once)
+npm run dev          # local dev server
+npm run build        # production build
+npm run start        # serve production build
+npm run lint         # ESLint
+npm run preview      # OpenNext build + local Workers runtime (copy .dev.vars.example to .dev.vars)
+npm run deploy       # OpenNext build + deploy to Cloudflare (npx wrangler login once)
+npm run cf-typegen   # Cloudflare env types
+
+npx drizzle-kit generate --name <name>   # generate SQL from the schema (paste into Neon, no migrate)
 ```
-- Config: `wrangler.jsonc`, `open-next.config.ts`. `nodejs_compat` is required. There is no ISR, so no KV or R2 binding is needed.
-- Secrets (set on Cloudflare, not in the repo): `npx wrangler secret put DATABASE_URL`, then the same for `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ADMIN_SETUP_KEY`, `CLOUDINARY_API_SECRET`.
-- `NEXT_PUBLIC_*` values and `DEPLOY_TARGET=cloudflare` must exist at build time. In Workers Builds, add them as build variables.
-- Keep the same env vars on Vercel and Cloudflare, or you get "works on one, broken on the other".
-- If you deploy with Workers Builds (git), set the build command to `npm run deploy` or `npx opennextjs-cloudflare build` and the deploy command to `npx opennextjs-cloudflare deploy`.
 
-## Deploy: Vercel
-Import the repo, add the same env vars, deploy. No extra config.
+## Deploy
 
-## Version pin
-`next` is pinned to exactly `16.3.8`. Next 16.4.0 makes every route return 500 on Cloudflare with `@opennextjs/cloudflare` 1.20.10 (`Unexpected loadManifest(preview-props.json)`, upstream issue opennextjs-cloudflare#1355). Upgrade Next only after OpenNext ships the fix, and run `npm run preview` before deploying.
+- Vercel: import the repo, add the env vars, deploy
+- Cloudflare: `npm run deploy`. Secrets with `npx wrangler secret put NAME`; `NEXT_PUBLIC_*` and `DEPLOY_TARGET=cloudflare` must exist at build time (Workers Builds: add them as build variables)
+- Keep the same env vars on both targets
+- Next.js is pinned to 16.3.8 because 16.4.0 breaks OpenNext 1.20.10 on Cloudflare (see AGENTS.md)
+
+Before promoting a deploy, run `npm run preview` and verify env vars on Vercel and Cloudflare.
+
+## Folder structure
+
+```
+src/app/(site)/   storefront routes
+src/app/admin/    dashboard routes and server actions
+src/app/api/      auth and upload-signature handlers
+src/components/   UI components (admin/ for the dashboard)
+src/data/         types, helpers, sample data
+src/i18n/         English and Bengali dictionaries
+src/lib/          db, auth, data layer, validation
+drizzle/          generated SQL
+```
+
+For the detailed structure, see PLANNER.md → Architecture.
