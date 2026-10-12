@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { bigint, boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 /* Better Auth core tables (names and columns must match Better Auth) */
 export const user = pgTable("user", {
@@ -61,19 +61,47 @@ export const rateLimit = pgTable("rate_limit", {
 });
 
 /* App tables */
+/** A type of jersey shown in the nav (Club, Country, Special, or anything the admin adds). */
+export const jerseyTypes = pgTable("jersey_types", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+/** An entry under a type: a club, a country or a special. `sizes` is the default for its jerseys. */
+export const jerseyGroups = pgTable(
+  "jersey_groups",
+  {
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+    typeId: uuid("type_id")
+      .notNull()
+      .references(() => jerseyTypes.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    slug: text("slug").notNull(),
+    sizes: text("sizes").array().notNull().default(sql`ARRAY['S','M','L','XL','2XL','3XL']::text[]`),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("jersey_groups_type_slug_uq").on(t.typeId, t.slug), index("jersey_groups_type_idx").on(t.typeId)],
+);
+
 export const jerseys = pgTable(
   "jerseys",
   {
     id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
     slug: text("slug").notNull().unique(),
     name: text("name").notNull(),
-    team: text("team").notNull(),
-    category: text("category").notNull(), // club | national | retro | special
+    groupId: uuid("group_id")
+      .notNull()
+      .references(() => jerseyGroups.id, { onDelete: "restrict" }),
     season: text("season").notNull(),
     version: text("version").notNull().default("Player"), // Player | Fan
     price: integer("price").notNull(),
     oldPrice: integer("old_price"),
-    sizes: text("sizes").array().notNull().default(sql`ARRAY['S','M','L','XL','2XL','3XL']::text[]`),
+    /** null = use the entry's sizes */
+    sizes: text("sizes").array(),
     inStock: boolean("in_stock").notNull().default(true),
     isNew: boolean("is_new").notNull().default(false),
     imageUrl: text("image_url"),
@@ -81,11 +109,7 @@ export const jerseys = pgTable(
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
-  (t) => [
-    index("jerseys_category_idx").on(t.category),
-    index("jerseys_team_idx").on(t.team),
-    index("jerseys_created_idx").on(t.createdAt),
-  ],
+  (t) => [index("jerseys_group_idx").on(t.groupId), index("jerseys_created_idx").on(t.createdAt)],
 );
 
 export const submissions = pgTable(

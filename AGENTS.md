@@ -16,7 +16,7 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
 
 - Updated: 2026-10-12
 - Status: Feature complete, waiting on env vars and first deploy
-- Works: photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, category and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
+- Works: types and entries (clubs, countries, specials) managed in the dashboard and driving the nav, shop filters and product pages, photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, category and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
 - In progress: nothing half-built
 - Next: fill env vars and run `drizzle/0000_init.sql` in Neon, create the first admin, add real jerseys, `npm run preview`, deploy to Vercel and Cloudflare
 - Watch out:
@@ -25,7 +25,8 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
   - The site shows sample jerseys when `DATABASE_URL` is unset; never ship without it
   - Blue (`--color-brand`) is a placeholder until a CTA color is chosen
   - No BRAIN.md and no SITETREE.md exist (project skipped Singularity and tree-man)
-  - No automated tests yet
+  - Only automated tests: `npm run test:db` (database logic on in-memory Postgres). No UI tests
+  - Jersey types are data, not code: `drizzle/seed.sql` (generated from `src/data/seed-types.json`) creates Club, Country and Special with their entries. Without `DATABASE_URL` the site falls back to the same seed list so it can be previewed
 
 ## Git Identity (Session Start — run before any commit, every session)
 
@@ -68,6 +69,11 @@ Execute automatically at the start of every session, before the first commit —
 - Public forms have a honeypot field and a site-wide flood guard (20 stored messages per 10 minutes)
 
 ## Session Log
+
+### 2026-10-12 (types)
+- Did: Jersey types are now fully data-driven. New tables `jersey_types` and `jersey_groups` (entries), jerseys link to an entry with `group_id`; the old `category` and `team` columns are gone. Only Home and Shop are hardcoded in the nav; every type shows as a dropdown with its entries. Dashboard Types section (add, rename, reorder, delete types and entries, set default sizes per entry). Jersey form picks type then entry and can override sizes for one jersey. New shop routes `/shop/[type]` and `/shop/[type]/[group]`. Seed SQL generated from `src/data/seed-types.json`. Added `npm run test:db` (20 checks on in-memory Postgres). Verified on `next start` and on `wrangler dev`
+- Decided: the entry holds the default sizes; a jersey can override. Retro is an entry under Special. Deleting a type or entry that still has jerseys is blocked. Type and entry names are shown as typed (not translated); Home, Shop and Custom Order stay translated. Slugs never change on rename
+- Next: unchanged (env vars, Neon SQL init then seed, first admin, real jerseys with photos, preview and deploy)
 
 ### 2026-10-12
 - Did: Replaced the drawn SVG jerseys with a neutral PhotoPlaceholder everywhere a photo goes (cards, product page, hero tiles, order popup, admin list); removed `JerseyArt` and the color/pattern fields from the data model. Order popup now only downloads real photos (no-photo jerseys skip straight to WhatsApp). Added a Cloudinary connection check (ping with the three env keys) to the dashboard Overview, upload hints and clearer errors, README Cloudinary steps. Verified the upload signature algorithm against Cloudinary's documented example

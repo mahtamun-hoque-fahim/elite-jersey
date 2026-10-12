@@ -1,8 +1,7 @@
 export type Lang = "en" | "bn";
 
 const en = {
-  nav: { home: "Home", shop: "Shop", club: "Club Jersey", national: "Country Jersey", retro: "Retro Jerseys", special: "Special Edition", custom: "Custom Order" },
-  categories: { club: "Club Jersey", national: "Country Jersey", retro: "Retro Jerseys", special: "Special Edition" },
+  nav: { home: "Home", shop: "Shop", custom: "Custom Order", allOf: "All {name}" },
   common: {
     searchPlaceholder: "Search jerseys...", searchLabel: "Search jerseys", search: "Search", whatsapp: "WhatsApp", customOrder: "Custom Order",
     openMenu: "Open menu", closeMenu: "Close menu", viewAll: "View all items", chatWhatsapp: "Chat on WhatsApp",
@@ -26,14 +25,14 @@ title: "Premium quality jerseys, delivered to you.",
   },
   shop: {
     title: "Shop", filters: "Filters", sortBy: "Sort by:", sortDefault: "Default sorting", sortPriceAsc: "Price: low to high", sortPriceDesc: "Price: high to low", sortName: "Name",
-    gCategory: "Category", gTeam: "Club / Country", gSeason: "Season", gSize: "Size", gPrice: "Price range", upTo: "Up to {price}", maxPrice: "Maximum price",
+    gSeason: "Season", gSize: "Size", gPrice: "Price range", upTo: "Up to {price}", maxPrice: "Maximum price",
     clearAll: "Clear all filters", clear: "Clear filters", count: "{n} jerseys", resultsFor: "Results for \"{q}\": ",
     emptyTitle: "No jerseys found", emptyText: "Try removing a filter or searching for something else.",
     showing: "Showing {from} - {to} of {total} results", prev: "Previous page", next: "Next page", pagination: "Pagination", showN: "Show {n} jerseys", closeFilters: "Close filters", close: "Close",
   },
   product: {
     home: "Home", size: "Size", askWhatsapp: "Ask on WhatsApp", askBack: "Ask if it is coming back",
-    type: "Type", team: "Club / Country", season: "Season", version: "Version", sizes: "Sizes available",
+    season: "Season", version: "Version", sizes: "Sizes available",
     about: "About this jersey", colorNote: "Photo colors may vary slightly depending on your screen.", related: "Related jerseys",
   },
   order: {
@@ -66,8 +65,7 @@ title: "Premium quality jerseys, delivered to you.",
 export type Dict = typeof en;
 
 const bn: Dict = {
-  nav: { home: "হোম", shop: "শপ", club: "ক্লাব জার্সি", national: "কান্ট্রি জার্সি", retro: "রেট্রো জার্সি", special: "স্পেশাল এডিশন", custom: "কাস্টম অর্ডার" },
-  categories: { club: "ক্লাব জার্সি", national: "কান্ট্রি জার্সি", retro: "রেট্রো জার্সি", special: "স্পেশাল এডিশন" },
+  nav: { home: "হোম", shop: "শপ", custom: "কাস্টম অর্ডার", allOf: "সব {name}" },
   common: {
     searchPlaceholder: "জার্সি খুঁজুন...", searchLabel: "জার্সি খুঁজুন", search: "খুঁজুন", whatsapp: "হোয়াটসঅ্যাপ", customOrder: "কাস্টম অর্ডার",
     openMenu: "মেনু খুলুন", closeMenu: "মেনু বন্ধ করুন", viewAll: "সব দেখুন", chatWhatsapp: "হোয়াটসঅ্যাপে চ্যাট করুন",
@@ -91,14 +89,14 @@ title: "প্রিমিয়াম কোয়ালিটির জার�
   },
   shop: {
     title: "শপ", filters: "ফিল্টার", sortBy: "সাজান:", sortDefault: "ডিফল্ট", sortPriceAsc: "দাম: কম থেকে বেশি", sortPriceDesc: "দাম: বেশি থেকে কম", sortName: "নাম",
-    gCategory: "ক্যাটাগরি", gTeam: "ক্লাব / দেশ", gSeason: "সিজন", gSize: "সাইজ", gPrice: "দামের সীমা", upTo: "সর্বোচ্চ {price}", maxPrice: "সর্বোচ্চ দাম",
+    gSeason: "সিজন", gSize: "সাইজ", gPrice: "দামের সীমা", upTo: "সর্বোচ্চ {price}", maxPrice: "সর্বোচ্চ দাম",
     clearAll: "সব ফিল্টার মুছুন", clear: "ফিল্টার মুছুন", count: "{n}টি জার্সি", resultsFor: "“{q}” এর ফলাফল: ",
     emptyTitle: "কোনো জার্সি পাওয়া যায়নি", emptyText: "একটি ফিল্টার সরিয়ে দেখুন বা অন্য কিছু খুঁজুন।",
     showing: "{total}টির মধ্যে {from} - {to} দেখানো হচ্ছে", prev: "আগের পৃষ্ঠা", next: "পরের পৃষ্ঠা", pagination: "পৃষ্ঠা", showN: "{n}টি জার্সি দেখুন", closeFilters: "ফিল্টার বন্ধ করুন", close: "বন্ধ করুন",
   },
   product: {
     home: "হোম", size: "সাইজ", askWhatsapp: "হোয়াটসঅ্যাপে জিজ্ঞাসা করুন", askBack: "আবার স্টকে আসবে কিনা জিজ্ঞাসা করুন",
-    type: "ধরন", team: "ক্লাব / দেশ", season: "সিজন", version: "ভার্সন", sizes: "যে সাইজ আছে",
+    season: "সিজন", version: "ভার্সন", sizes: "যে সাইজ আছে",
     about: "এই জার্সি সম্পর্কে", colorNote: "স্ক্রিনভেদে ছবির রঙে সামান্য পার্থক্য হতে পারে।", related: "সম্পর্কিত জার্সি",
   },
   order: {

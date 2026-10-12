@@ -5,11 +5,18 @@ import { useActionState, useState } from "react";
 import { Loader2, Upload } from "lucide-react";
 import { saveJersey } from "@/app/admin/actions";
 import { Field, inputCls, textareaCls } from "@/components/FormField";
-import { ALL_SIZES, categoryLabels, img, type Category, type Jersey } from "@/data/jerseys";
+import { SizeChecks } from "./SizeChecks";
+import { img, type CatalogType, type Jersey } from "@/data/jerseys";
 import { cn } from "@/lib/cn";
 
-export function JerseyForm({ jersey }: { jersey?: Jersey }) {
+export function JerseyForm({ jersey, types }: { jersey?: Jersey; types: CatalogType[] }) {
   const [state, action, pending] = useActionState(saveJersey, undefined);
+  const initialType = types.find((t) => t.groups.some((g) => g.id === jersey?.groupId)) ?? types[0];
+  const [typeId, setTypeId] = useState(initialType?.id ?? "");
+  const type = types.find((t) => t.id === typeId) ?? types[0];
+  const [groupId, setGroupId] = useState(jersey?.groupId ?? type?.groups[0]?.id ?? "");
+  const group = type?.groups.find((g) => g.id === groupId) ?? type?.groups[0];
+  const [customSizes, setCustomSizes] = useState(Boolean(jersey?.sizesOverride));
   const [imageUrl, setImageUrl] = useState(jersey?.image ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -74,15 +81,29 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
           <div className="sm:col-span-2">
             <Field label="Jersey name" htmlFor="name"><input id="name" name="name" required defaultValue={jersey?.name} className={inputCls} /></Field>
           </div>
-          <Field label="Club / Country" htmlFor="team"><input id="team" name="team" required defaultValue={jersey?.team} className={inputCls} /></Field>
-          <Field label="Season" htmlFor="season"><input id="season" name="season" required defaultValue={jersey?.season} placeholder="26/27" className={inputCls} /></Field>
-          <Field label="Category" htmlFor="category">
-            <select id="category" name="category" defaultValue={jersey?.category ?? "club"} className={inputCls}>
-              {(Object.keys(categoryLabels) as Category[]).map((c) => (
-                <option key={c} value={c}>{categoryLabels[c]}</option>
+          <Field label="Type" htmlFor="typeId">
+            <select
+              id="typeId"
+              value={typeId}
+              onChange={(e) => {
+                setTypeId(e.target.value);
+                setGroupId(types.find((t) => t.id === e.target.value)?.groups[0]?.id ?? "");
+              }}
+              className={inputCls}
+            >
+              {types.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
               ))}
             </select>
           </Field>
+          <Field label="Entry" htmlFor="groupId">
+            <select id="groupId" name="groupId" value={group?.id ?? ""} onChange={(e) => setGroupId(e.target.value)} required className={inputCls}>
+              {type?.groups.map((g) => (
+                <option key={g.id} value={g.id}>{g.name}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Season" htmlFor="season"><input id="season" name="season" required defaultValue={jersey?.season} placeholder="26/27" className={inputCls} /></Field>
           <Field label="Version" htmlFor="version">
             <select id="version" name="version" defaultValue={jersey?.version ?? "Player"} className={inputCls}>
               <option>Player</option>
@@ -95,18 +116,19 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
       </section>
 
       <section className="space-y-5 rounded-xl border border-line bg-white p-5">
-        <fieldset>
-          <legend className="mb-2 text-sm font-semibold">Available sizes</legend>
-          <div className="flex flex-wrap gap-2">
-            {ALL_SIZES.map((s) => (
-              <label key={s} className="cursor-pointer">
-                <input type="checkbox" name="sizes" value={s} defaultChecked={jersey ? jersey.sizes.includes(s) : true} className="peer sr-only" />
-                <span className="grid h-10 min-w-12 place-items-center rounded-full border border-line px-4 text-sm font-medium transition-colors peer-checked:border-brand peer-checked:bg-brand peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand/40">
-                  {s}
-                </span>
-              </label>
-            ))}
-          </div>
+        <fieldset className="space-y-3">
+          <legend className="mb-1 text-sm font-semibold">Available sizes</legend>
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <input type="checkbox" checked={customSizes} onChange={(e) => setCustomSizes(e.target.checked)} className="size-4 accent-brand" />
+            Set sizes for this jersey only
+          </label>
+          {customSizes ? (
+            <SizeChecks key={group?.id} selected={jersey?.sizesOverride ?? group?.sizes} />
+          ) : (
+            <p className="text-sm text-muted">
+              Uses the sizes set for {group?.name ?? "the entry"}: {group?.sizes.join(", ") ?? "none"}. Change them under Types.
+            </p>
+          )}
         </fieldset>
 
         <div className="flex flex-wrap gap-6 text-sm">
@@ -121,9 +143,14 @@ export function JerseyForm({ jersey }: { jersey?: Jersey }) {
         <Field label="Description" htmlFor="description"><textarea id="description" name="description" rows={4} defaultValue={jersey?.description} className={textareaCls} /></Field>
       </section>
 
+      {types.length === 0 && (
+        <p role="alert" className="rounded-lg bg-brand-tint p-3 text-sm">
+          Add a type and an entry first. <Link href="/admin/types" className="font-semibold text-brand hover:underline">Open Types</Link>
+        </p>
+      )}
       {state?.error && <p role="alert" className="text-sm font-medium text-red-600">{state.error}</p>}
       <div className="flex gap-3">
-        <button type="submit" disabled={pending || uploading} className={cn("h-12 rounded-xl bg-brand px-8 font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60")}>
+        <button type="submit" disabled={pending || uploading || !group} className={cn("h-12 rounded-xl bg-brand px-8 font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60")}>
           {pending ? "Saving..." : jersey ? "Save changes" : "Add jersey"}
         </button>
         <Link href="/admin/jerseys" className="grid h-12 place-items-center rounded-xl border border-line bg-white px-6 font-semibold hover:bg-bg">Cancel</Link>

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ExternalLink, Inbox, LayoutDashboard, LogOut, Shirt, Users } from "lucide-react";
+import { ExternalLink, Inbox, Layers, LayoutDashboard, LogOut, Shirt, Users } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
 
 const links = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/jerseys", label: "Jerseys", icon: Shirt },
+  { href: "/admin/types", label: "Types", icon: Layers },
   { href: "/admin/inbox", label: "Inbox", icon: Inbox },
   { href: "/admin/admins", label: "Admins", icon: Users },
 ];

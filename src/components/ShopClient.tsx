@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 import { ProductGrid } from "./ProductGrid";
-import { ALL_SIZES, type Category, type Jersey } from "@/data/jerseys";
+import { ALL_SIZES, type CatalogType, type Jersey } from "@/data/jerseys";
 import { useI18n } from "@/i18n/client";
 import { fmt } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
@@ -18,11 +18,10 @@ function toggle<T>(list: T[], v: T) {
   return list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
 }
 
-export function ShopClient({ items, initialCategory }: { items: Jersey[]; initialCategory?: Category }) {
+export function ShopClient({ items, types, initialGroups = [] }: { items: Jersey[]; types: CatalogType[]; initialGroups?: string[] }) {
   const { t } = useI18n();
   const q = (useSearchParams().get("q") ?? "").trim().toLowerCase();
-  const [cats, setCats] = useState<Category[]>(initialCategory ? [initialCategory] : []);
-  const [teams, setTeams] = useState<string[]>([]);
+  const [groupIds, setGroupIds] = useState<string[]>(initialGroups);
   const [seasons, setSeasons] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
@@ -30,14 +29,12 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
   const [page, setPage] = useState(1);
   const [sheet, setSheet] = useState(false);
 
-  const teamOptions = useMemo(() => [...new Set(items.map((j) => j.team))].sort(), [items]);
   const seasonOptions = useMemo(() => [...new Set(items.map((j) => j.season))].sort().reverse(), [items]);
 
   const filtered = useMemo(() => {
     const list = items.filter(
       (j) =>
-        (!cats.length || cats.includes(j.category)) &&
-        (!teams.length || teams.includes(j.team)) &&
+        (!groupIds.length || groupIds.includes(j.groupId)) &&
         (!seasons.length || seasons.includes(j.season)) &&
         (!sizes.length || sizes.some((s) => j.sizes.includes(s))) &&
         j.price <= maxPrice &&
@@ -47,16 +44,15 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
     if (sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [items, cats, teams, seasons, sizes, maxPrice, sort, q]);
+  }, [items, groupIds, seasons, sizes, maxPrice, sort, q]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const current = Math.min(page, pages);
   const visible = filtered.slice((current - 1) * PER_PAGE, current * PER_PAGE);
-  const hasFilters = cats.length + teams.length + seasons.length + sizes.length > 0 || maxPrice < MAX_PRICE;
+  const hasFilters = groupIds.length + seasons.length + sizes.length > 0 || maxPrice < MAX_PRICE;
 
   function reset() {
-    setCats([]);
-    setTeams([]);
+    setGroupIds([]);
     setSeasons([]);
     setSizes([]);
     setMaxPrice(MAX_PRICE);
@@ -65,18 +61,17 @@ export function ShopClient({ items, initialCategory }: { items: Jersey[]; initia
 
   const panel = (
     <div className="space-y-4">
-      <Group title={t.shop.gCategory}>
-        {(Object.keys(t.categories) as Category[]).map((c) => (
-          <Check key={c} label={t.categories[c]} checked={cats.includes(c)} onChange={() => { setCats(toggle(cats, c)); setPage(1); }} />
+      {types
+        .filter((ty) => ty.groups.length > 0)
+        .map((ty) => (
+          <Group key={ty.id} title={ty.name}>
+            <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
+              {ty.groups.map((g) => (
+                <Check key={g.id} label={g.name} checked={groupIds.includes(g.id)} onChange={() => { setGroupIds(toggle(groupIds, g.id)); setPage(1); }} />
+              ))}
+            </div>
+          </Group>
         ))}
-      </Group>
-      <Group title={t.shop.gTeam}>
-        <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
-          {teamOptions.map((t) => (
-            <Check key={t} label={t} checked={teams.includes(t)} onChange={() => { setTeams(toggle(teams, t)); setPage(1); }} />
-          ))}
-        </div>
-      </Group>
       <Group title={t.shop.gSeason}>
         {seasonOptions.map((s) => (
           <Check key={s} label={s} checked={seasons.includes(s)} onChange={() => { setSeasons(toggle(seasons, s)); setPage(1); }} />

@@ -6,6 +6,7 @@ import { MobileNav } from "./MobileNav";
 import { LangToggle } from "./LangToggle";
 import { waLink } from "@/lib/site";
 import { getT } from "@/i18n/server";
+import { getCatalog } from "@/lib/data/jerseys";
 
 function SearchBox({ className, label, placeholder, submit }: { className?: string; label: string; placeholder: string; submit: string }) {
   return (
@@ -31,6 +32,7 @@ function SearchBox({ className, label, placeholder, submit }: { className?: stri
 
 export async function Header() {
   const { t } = await getT();
+  const types = (await getCatalog()).map((ty) => ({ name: ty.name, slug: ty.slug, groups: ty.groups.map((g) => ({ name: g.name, slug: g.slug })) }));
   const sb = { label: t.common.searchLabel, placeholder: t.common.searchPlaceholder, submit: t.common.search };
   return (
     <header className="relative z-30 border-b border-line bg-white">
@@ -54,7 +56,7 @@ export async function Header() {
             {t.common.customOrder}
           </Link>
           <LangToggle />
-          <MobileNav />
+          <MobileNav types={types} />
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-3 md:hidden">
@@ -62,7 +64,7 @@ export async function Header() {
       </div>
       <nav aria-label="Main" className="hidden border-t border-line lg:block">
         <div className="mx-auto max-w-7xl px-4">
-          <NavLinks />
+          <NavLinks types={types} />
         </div>
       </nav>
     </header>

@@ -26,8 +26,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
 
   const save = savePercent(j);
   const specs = [
-    [t.product.type, t.categories[j.category]],
-    [t.product.team, j.team],
+    [j.typeName, j.groupName],
     [t.product.season, j.season],
     [t.product.version, j.version === "Fan" ? t.common.fan : t.common.player],
     [t.product.sizes, j.sizes.join(", ")],
@@ -38,9 +37,9 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
       <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-sm text-muted">
         <Link href="/" className="hover:text-brand">{t.product.home}</Link>
         <ChevronRight className="size-4" />
-        <Link href={`/shop/${j.category}`} className="hover:text-brand">{t.categories[j.category]}</Link>
+        <Link href={`/shop/${j.typeSlug}`} className="hover:text-brand">{j.typeName}</Link>
         <ChevronRight className="size-4" />
-        <span className="text-ink">{j.team}</span>
+        <Link href={`/shop/${j.typeSlug}/${j.groupSlug}`} className="text-ink hover:text-brand">{j.groupName}</Link>
       </nav>
 
       <div className="grid gap-8 rounded-2xl border border-line bg-white p-4 sm:p-6 lg:grid-cols-2">
@@ -81,7 +80,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
       </section>
 
       <section className="mt-12">
-        <SectionHeading title={t.product.related} href={`/shop/${j.category}`} viewAll={t.common.viewAll} />
+        <SectionHeading title={t.product.related} href={`/shop/${j.typeSlug}`} viewAll={t.common.viewAll} />
         <ProductGrid items={rel} className="xl:grid-cols-4" />
       </section>
     </div>

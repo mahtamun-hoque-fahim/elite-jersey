@@ -6,7 +6,7 @@ import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { deleteJersey, toggleStock } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/auth/session";
 import { adminListJerseys } from "@/lib/data/jerseys";
-import { categoryLabels, img, money } from "@/data/jerseys";
+import { img, money } from "@/data/jerseys";
 import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = { title: "Jerseys" };
@@ -35,7 +35,7 @@ export default async function JerseysAdminPage() {
             <thead className="border-b border-line bg-bg text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="p-3 font-semibold">Jersey</th>
-                <th className="p-3 font-semibold">Category</th>
+                <th className="p-3 font-semibold">Type / entry</th>
                 <th className="p-3 font-semibold">Price</th>
                 <th className="p-3 font-semibold">Stock</th>
                 <th className="p-3 text-right font-semibold">Actions</th>
@@ -56,11 +56,11 @@ export default async function JerseysAdminPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="line-clamp-1 font-semibold">{j.name}</p>
-                        <p className="text-xs text-muted">{j.team} &middot; {j.season}</p>
+                        <p className="text-xs text-muted">{j.season} &middot; {j.sizes.join(", ")}{j.sizesOverride ? " (custom)" : ""}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-3 text-muted">{categoryLabels[j.category]}</td>
+                  <td className="p-3 text-muted">{j.typeName} &middot; {j.groupName}</td>
                   <td className="p-3 font-semibold">{money(j.price)}</td>
                   <td className="p-3">
                     <form action={toggleStock}>

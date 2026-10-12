@@ -1,5 +1,5 @@
 {
-  "id": "0c7a0dbf-79bb-465b-8295-c508f8d5d93c",
+  "id": "b91c4648-7822-4384-9e51-abd4bfeb4666",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -111,6 +111,170 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.jersey_groups": {
+      "name": "jersey_groups",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "type_id": {
+          "name": "type_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sizes": {
+          "name": "sizes",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "ARRAY['S','M','L','XL','2XL','3XL']::text[]"
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "jersey_groups_type_slug_uq": {
+          "name": "jersey_groups_type_slug_uq",
+          "columns": [
+            {
+              "expression": "type_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "jersey_groups_type_idx": {
+          "name": "jersey_groups_type_idx",
+          "columns": [
+            {
+              "expression": "type_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "jersey_groups_type_id_jersey_types_id_fk": {
+          "name": "jersey_groups_type_id_jersey_types_id_fk",
+          "tableFrom": "jersey_groups",
+          "tableTo": "jersey_types",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.jersey_types": {
+      "name": "jersey_types",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "jersey_types_slug_unique": {
+          "name": "jersey_types_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.jerseys": {
       "name": "jerseys",
       "schema": "",
@@ -134,15 +298,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "team": {
-          "name": "team",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "text",
+        "group_id": {
+          "name": "group_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -175,8 +333,7 @@
           "name": "sizes",
           "type": "text[]",
           "primaryKey": false,
-          "notNull": true,
-          "default": "ARRAY['S','M','L','XL','2XL','3XL']::text[]"
+          "notNull": false
         },
         "in_stock": {
           "name": "in_stock",
@@ -221,26 +378,11 @@
         }
       },
       "indexes": {
-        "jerseys_category_idx": {
-          "name": "jerseys_category_idx",
+        "jerseys_group_idx": {
+          "name": "jerseys_group_idx",
           "columns": [
             {
-              "expression": "category",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "jerseys_team_idx": {
-          "name": "jerseys_team_idx",
-          "columns": [
-            {
-              "expression": "team",
+              "expression": "group_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -267,7 +409,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "jerseys_group_id_jersey_groups_id_fk": {
+          "name": "jerseys_group_id_jersey_groups_id_fk",
+          "tableFrom": "jerseys",
+          "tableTo": "jersey_groups",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "jerseys_slug_unique": {

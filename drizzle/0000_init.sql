@@ -14,17 +14,35 @@ CREATE TABLE "account" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "jersey_groups" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"type_id" uuid NOT NULL,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
+	"sizes" text[] DEFAULT ARRAY['S','M','L','XL','2XL','3XL']::text[] NOT NULL,
+	"sort_order" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "jersey_types" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
+	"sort_order" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "jersey_types_slug_unique" UNIQUE("slug")
+);
+--> statement-breakpoint
 CREATE TABLE "jerseys" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"slug" text NOT NULL,
 	"name" text NOT NULL,
-	"team" text NOT NULL,
-	"category" text NOT NULL,
+	"group_id" uuid NOT NULL,
 	"season" text NOT NULL,
 	"version" text DEFAULT 'Player' NOT NULL,
 	"price" integer NOT NULL,
 	"old_price" integer,
-	"sizes" text[] DEFAULT ARRAY['S','M','L','XL','2XL','3XL']::text[] NOT NULL,
+	"sizes" text[],
 	"in_stock" boolean DEFAULT true NOT NULL,
 	"is_new" boolean DEFAULT false NOT NULL,
 	"image_url" text,
@@ -85,8 +103,11 @@ CREATE TABLE "verification" (
 );
 --> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "jersey_groups" ADD CONSTRAINT "jersey_groups_type_id_jersey_types_id_fk" FOREIGN KEY ("type_id") REFERENCES "public"."jersey_types"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "jerseys" ADD CONSTRAINT "jerseys_group_id_jersey_groups_id_fk" FOREIGN KEY ("group_id") REFERENCES "public"."jersey_groups"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "jerseys_category_idx" ON "jerseys" USING btree ("category");--> statement-breakpoint
-CREATE INDEX "jerseys_team_idx" ON "jerseys" USING btree ("team");--> statement-breakpoint
+CREATE UNIQUE INDEX "jersey_groups_type_slug_uq" ON "jersey_groups" USING btree ("type_id","slug");--> statement-breakpoint
+CREATE INDEX "jersey_groups_type_idx" ON "jersey_groups" USING btree ("type_id");--> statement-breakpoint
+CREATE INDEX "jerseys_group_idx" ON "jerseys" USING btree ("group_id");--> statement-breakpoint
 CREATE INDEX "jerseys_created_idx" ON "jerseys" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "submissions_status_created_idx" ON "submissions" USING btree ("status","created_at");

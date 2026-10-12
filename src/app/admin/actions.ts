@@ -34,8 +34,7 @@ export async function saveJersey(_prev: State, formData: FormData): Promise<Stat
 
   const parsed = jerseySchema.safeParse({
     name: formData.get("name"),
-    team: formData.get("team"),
-    category: formData.get("category"),
+    groupId: formData.get("groupId"),
     season: formData.get("season"),
     version: formData.get("version"),
     price: formData.get("price"),

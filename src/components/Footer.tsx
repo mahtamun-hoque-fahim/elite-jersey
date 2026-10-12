@@ -4,9 +4,11 @@ import { FacebookIcon, InstagramIcon } from "./BrandIcons";
 import { Logo } from "./Logo";
 import { site, waLink } from "@/lib/site";
 import { getT } from "@/i18n/server";
+import { getCatalog } from "@/lib/data/jerseys";
 
 export async function Footer() {
   const { t } = await getT();
+  const types = await getCatalog();
   const { facebook, instagram } = site.social;
   return (
     <footer className="mt-16 border-t border-line bg-white">
@@ -40,11 +42,10 @@ export async function Footer() {
         <div>
           <h2 className="mb-4 font-display text-base font-semibold">{t.footer.shop}</h2>
           <ul className="space-y-2.5 text-sm text-muted">
-            {site.nav.slice(1, 6).map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} className="transition-colors hover:text-brand">
-                  {t.nav[l.key]}
-                </Link>
+            <li><Link href="/shop" className="transition-colors hover:text-brand">{t.nav.shop}</Link></li>
+            {types.map((ty) => (
+              <li key={ty.slug}>
+                <Link href={`/shop/${ty.slug}`} className="transition-colors hover:text-brand">{ty.name}</Link>
               </li>
             ))}
           </ul>

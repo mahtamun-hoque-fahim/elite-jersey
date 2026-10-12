@@ -98,13 +98,15 @@ Poppins 600, blue `h-0.5 w-10` underline, "View all items" link on the right in 
 Native `<dialog>`; centered `max-w-md`, bottom sheet on mobile. Jersey summary, size pills, 3 numbered steps, Download Photo (primary), Continue to WhatsApp (locked until downloaded), note line. A jersey with no photo skips the steps and the download button, shows a short notice, and Continue to WhatsApp is enabled immediately.
 
 ### Shop filters
-Left sidebar `17rem` on desktop with collapsible groups (blue underline titles); bottom sheet on mobile. 4-column grid on desktop, 2 columns on mobile, 12 per page.
+Left sidebar `17rem` on desktop with collapsible groups (blue underline titles); bottom sheet on mobile. One filter group per type (titled with the type name, listing its entries), then Season, Size and Price range. `/shop/{type}/{entry}` opens with that entry pre-checked. 4-column grid on desktop, 2 columns on mobile, 12 per page.
 
 ### Header and nav
 Logo (black SVG, `public/logo.svg`) left, centered search, WhatsApp link, blue Custom Order button, language toggle; centered nav row below on large screens, hamburger on mobile. Active nav item is blue.
 
+Only Home and Shop are fixed. Every other nav item is a type from the database (Club, Country, Special, anything added in the dashboard), in the order set there. On desktop each type is a hover/focus dropdown: `w-60` white panel, `rounded-xl border-line shadow-lg`, "All {type}" first in blue, then its entries, scrolls after `max-h-80`. On mobile each type is a `<details>` accordion inside the hamburger menu, with a blue Custom Order button at the bottom. Entry links go to `/shop/{type}/{entry}`.
+
 ### Admin dashboard (`/admin`)
-Same tokens. White sidebar (top bar on mobile), grey content area, white bordered cards. Tables scroll horizontally on small screens. Delete actions ask for confirmation. Pages: Overview, Jerseys, Add/Edit jersey, Inbox, Admins, plus centered Login and Setup cards. Stays English.
+Same tokens. Types page: list of types with up/down, delete and a link to each type; type page: rename, add entry (name + size pills) and an editable row per entry (name, size pills, Save, up/down, delete). Errors (for example deleting something that still has jerseys) show as a red banner at the top. White sidebar (top bar on mobile), grey content area, white bordered cards. Tables scroll horizontally on small screens. Delete actions ask for confirmation. Pages: Overview, Jerseys, Add/Edit jersey, Inbox, Admins, plus centered Login and Setup cards. Stays English.
 
 ### Language toggle
 Shows the other language ("বাং" or "EN") with a languages icon. Choice stored in the `lang` cookie; no cookie falls back to the browser language (Bengali if it starts with bn).

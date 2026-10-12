@@ -1,21 +1,20 @@
 import { z } from "zod";
 
-export const categories = ["club", "national", "retro", "special"] as const;
 export const sizeList = ["S", "M", "L", "XL", "2XL", "3XL"] as const;
 
 const money = z.coerce.number().int().min(0).max(1_000_000);
 
 export const jerseySchema = z.object({
   name: z.string().trim().min(3).max(160),
-  team: z.string().trim().min(2).max(80),
-  category: z.enum(categories),
+  groupId: z.string().uuid("Pick a type and an entry"),
   season: z.string().trim().min(2).max(20),
   version: z.enum(["Player", "Fan"]),
   price: money.refine((n) => n > 0, "Price is required"),
   oldPrice: z
     .union([z.literal(""), money])
     .transform((v) => (v === "" || v === 0 ? null : v)),
-  sizes: z.array(z.enum(sizeList)).min(1, "Pick at least one size"),
+  // empty = use the entry's sizes
+  sizes: z.array(z.enum(sizeList)).transform((v) => (v.length ? v : null)),
   inStock: z.boolean(),
   isNew: z.boolean(),
   imageUrl: z

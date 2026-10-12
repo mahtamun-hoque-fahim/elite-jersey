@@ -5,17 +5,17 @@ import { cn } from "@/lib/cn";
 import { img } from "@/data/jerseys";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SectionHeading } from "@/components/SectionHeading";
-import { listJerseys } from "@/lib/data/jerseys";
+import { getCatalog, listJerseys } from "@/lib/data/jerseys";
 import { getT } from "@/i18n/server";
 
 export default async function HomePage() {
   const { t } = await getT();
-  const all = await listJerseys();
+  const [all, types] = await Promise.all([listJerseys(), getCatalog()]);
   const hero = [all[1], all[0], all[2]]; // three slots; missing jerseys show the placeholder
-  const latest = all.slice(0, 10);
-  const club = all.filter((j) => j.category === "club").slice(0, 10);
-  const country = all.filter((j) => j.category === "national").slice(0, 10);
-  const retroSpecial = all.filter((j) => j.category === "retro" || j.category === "special").slice(0, 10);
+  const sections = [
+    { key: "latest", title: t.home.newArrivals, href: "/shop", items: all.slice(0, 10) },
+    ...types.map((ty) => ({ key: ty.id, title: ty.name, href: `/shop/${ty.slug}`, items: all.filter((j) => j.typeSlug === ty.slug).slice(0, 10) })),
+  ];
 
   return (
     <div className="mx-auto max-w-7xl space-y-14 px-4 py-6">
@@ -56,15 +56,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {[
-        { title: t.home.newArrivals, href: "/shop", items: latest },
-        { title: t.home.club, href: "/shop/club", items: club },
-        { title: t.home.country, href: "/shop/national", items: country },
-        { title: t.home.retroSpecial, href: "/shop/retro", items: retroSpecial },
-      ].map(
+      {sections.map(
         (s) =>
           s.items.length > 0 && (
-            <section key={s.title}>
+            <section key={s.key}>
               <SectionHeading title={s.title} href={s.href} viewAll={t.common.viewAll} />
               <ProductGrid items={s.items} />
             </section>

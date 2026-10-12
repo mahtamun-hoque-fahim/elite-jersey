@@ -8,15 +8,6 @@ export const site = {
     facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL ?? "",
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "",
   },
-  nav: [
-    { href: "/", key: "home" },
-    { href: "/shop", key: "shop" },
-    { href: "/shop/club", key: "club" },
-    { href: "/shop/national", key: "national" },
-    { href: "/shop/retro", key: "retro" },
-    { href: "/shop/special", key: "special" },
-    { href: "/custom-order", key: "custom" },
-  ],
 } as const;
 
 export function waLink(text: string) {
