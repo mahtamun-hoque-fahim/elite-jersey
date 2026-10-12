@@ -91,7 +91,8 @@ src/components/   UI components (admin/ for the dashboard)
 src/data/         types, helpers, sample data
 src/i18n/         English and Bengali dictionaries
 src/lib/          db, auth, data layer, validation
-drizzle/          generated SQL
+drizzle/          generated SQL (0000_init.sql tables, seed.sql types and entries)
+scripts/          seed SQL generator, database tests
 ```
 
 For the detailed structure, see PLANNER.md → Architecture.

@@ -16,9 +16,9 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
 
 - Updated: 2026-10-12
 - Status: Feature complete, waiting on env vars and first deploy
-- Works: types and entries (clubs, countries, specials) managed in the dashboard and driving the nav, shop filters and product pages, photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, category and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
+- Works: types and entries (clubs, countries, specials) managed in the dashboard and driving the nav, shop filters and product pages, photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, type and entry pages and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
 - In progress: nothing half-built
-- Next: fill env vars and run `drizzle/0000_init.sql` in Neon, create the first admin, add real jerseys, `npm run preview`, deploy to Vercel and Cloudflare
+- Next: fill env vars; in Neon run `drizzle/0000_init.sql` then `drizzle/seed.sql`; create the first admin; confirm Cloudinary on the dashboard Overview; add real jerseys with photos; `npm run preview`; deploy to Vercel and Cloudflare. Then legal pages (needs owner policies) and SEO
 - Watch out:
   - Next.js is pinned to exactly 16.3.8: 16.4.0 returns 500 on every route on Cloudflare with `@opennextjs/cloudflare` 1.20.10 (`Unexpected loadManifest(preview-props.json)`, opennextjs-cloudflare#1355). Do not bump until OpenNext ships the fix, then run `npm run preview`
   - Nothing has run against a real Neon database yet: the schema and Better Auth were tested on local Postgres (PGlite) only
