@@ -58,6 +58,7 @@ function toJersey({ j, g, t }: JoinRow): Jersey {
     inStock: j.inStock,
     isNew: j.isNew,
     image: j.imageUrl ?? undefined,
+    fbPostUrl: j.fbPostUrl ?? undefined,
     description: j.description,
   };
 }

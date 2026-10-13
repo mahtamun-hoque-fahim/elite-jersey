@@ -22,7 +22,7 @@ Football jersey catalog: browse, tap Buy Now, download the photo, continue on Wh
 1. Clone the repo: `git clone https://github.com/mahtamun-hoque-fahim/elite-jersey`
 2. Install: `npm install`
 3. Copy `.env.example` to `.env.local` and fill in values (see PLANNER.md → Env Vars). Without `DATABASE_URL` the site shows sample jerseys.
-4. Create tables: paste `drizzle/0000_init.sql` into the Neon SQL editor and run it. Then paste `drizzle/seed.sql` to add the starting types and entries (Club, Country, Special and their clubs, countries and specials). The seed is safe to run more than once
+4. Create tables (this file includes the per-jersey Facebook post link column): paste `drizzle/0000_init.sql` into the Neon SQL editor and run it. Then paste `drizzle/seed.sql` to add the starting types and entries (Club, Country, Special and their clubs, countries and specials). The seed is safe to run more than once
 5. Run dev: `npm run dev`
 6. Create the first admin at `/admin/setup` (needs `ADMIN_SETUP_KEY`), then remove that variable
 
@@ -35,6 +35,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER
 NEXT_PUBLIC_PHONE
 NEXT_PUBLIC_ADDRESS
 NEXT_PUBLIC_FACEBOOK_URL
+NEXT_PUBLIC_FACEBOOK_PAGE_USERNAME
 NEXT_PUBLIC_INSTAGRAM_URL
 DATABASE_URL
 DATABASE_URL_UNPOOLED
@@ -45,6 +46,12 @@ CLOUDINARY_CLOUD_NAME
 CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET
 ```
+
+## Messenger and Facebook posts
+
+- Set `NEXT_PUBLIC_FACEBOOK_PAGE_USERNAME` to your page username (the part after facebook.com/). This turns on the Order via Messenger link (`https://m.me/<username>`); it stays hidden until set. Messenger cannot be prefilled from a website, so the link also copies the order message to the clipboard
+- On each jersey in the dashboard you can paste the link to its Facebook post. The product page then shows View on Facebook post. Only https links to facebook.com, fb.com, fb.watch and fb.me are accepted
+- WhatsApp stays the main Buy Now channel (prefilled message)
 
 ## Cloudinary (jersey photos)
 

@@ -36,6 +36,7 @@ export interface Jersey {
   inStock: boolean;
   isNew?: boolean;
   image?: string;
+  fbPostUrl?: string;
   description: string;
 }
 

@@ -80,6 +80,9 @@ Textarea uses the same classes with `py-2.5` and no fixed height. Shared in `src
 ### Product card
 White card, `border-line`, `p-3`. Image on `bg-linear-to-b from-white to-zinc-200/70`, square. Blue badge top-right (`SAVE n%` or `NEW`). Title 2 lines, centered. Price bold with struck old price. Buttons: Buy Now (primary) + Details (outline). Stock out replaces buttons with a bordered `Stock Out` box.
 
+### Product page actions
+Under the size pills: Buy Now (primary) + Ask on WhatsApp (outline). Below that a secondary row of two white bordered buttons (`h-11 rounded-xl border-line`, blue border on hover): Download image (shown when the jersey has a photo) and View on Facebook post with an external-link icon (shown when the jersey has a post link). Then the Order via Messenger plain text link (`text-sm font-semibold text-brand hover:underline`, shown when the page username env is set); clicking it copies the order message and shows a small "Order message copied" note under it. The same Messenger link sits under Continue to WhatsApp in the Buy Now popup.
+
 ### Photo placeholder
 `src/components/PhotoPlaceholder.tsx`. Fills its parent (`size-full`), `bg-linear-to-b from-white to-zinc-200/70`, white circle with a lucide image icon (`size-14`, `size-8` when `compact`) and a `text-xs text-muted` label. Same box as a photo, so nothing shifts when a real image arrives. Used in cards, product page, home hero tiles, order popup thumbnail and the admin jersey list (compact).
 

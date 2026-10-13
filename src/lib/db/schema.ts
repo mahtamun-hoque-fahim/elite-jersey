@@ -105,6 +105,8 @@ export const jerseys = pgTable(
     inStock: boolean("in_stock").notNull().default(true),
     isNew: boolean("is_new").notNull().default(false),
     imageUrl: text("image_url"),
+    /** link to this jersey's Facebook post */
+    fbPostUrl: text("fb_post_url"),
     description: text("description").notNull().default(""),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),

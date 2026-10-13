@@ -5,6 +5,8 @@ import { Check, Download, MessageCircle, X } from "lucide-react";
 import { PhotoPlaceholder } from "./PhotoPlaceholder";
 import { cn } from "@/lib/cn";
 import { img, money, type Jersey } from "@/data/jerseys";
+import { MessengerLink } from "./MessengerLink";
+import { downloadPhoto, orderMessage } from "@/lib/order";
 import { waLink } from "@/lib/site";
 import { useI18n } from "@/i18n/client";
 
@@ -15,17 +17,6 @@ export function useOrder() {
   const ctx = useContext(OrderContext);
   if (!ctx) throw new Error("useOrder must be used inside OrderProvider");
   return ctx;
-}
-
-function saveBlob(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export function OrderProvider({ children }: { children: ReactNode }) {
@@ -53,11 +44,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     if (!jersey?.image) return;
     setBusy(true);
     try {
-      const res = await fetch(img(jersey.image, "f_jpg,q_90,w_1200") ?? jersey.image);
-      const blob = await res.blob();
-      const ext = blob.type.split("/")[1]?.replace("jpeg", "jpg").replace("svg+xml", "svg") || "jpg";
-      saveBlob(blob, `${jersey.slug}.${ext}`);
-      setDownloaded(true);
+      if (await downloadPhoto(jersey)) setDownloaded(true);
     } finally {
       setBusy(false);
     }
@@ -67,9 +54,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   // Without a photo there is nothing to download, so WhatsApp is available straight away.
   const ready = hasPhoto ? downloaded : true;
 
-  const message = jersey
-    ? `Hi Elite Jersey, I want to order this jersey.\n\n${jersey.name}\nSize: ${size || "(please confirm)"}\nPrice: ${money(jersey.price)}\nLink: ${typeof window !== "undefined" ? window.location.origin : ""}/jersey/${jersey.slug}${jersey.image ? "\n\nI have attached the photo." : ""}`
-    : "";
+  const message = jersey ? orderMessage(jersey, size) : "";
 
   return (
     <OrderContext.Provider value={{ open }}>
@@ -168,6 +153,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                 <MessageCircle className="size-5" />
                 {t.order.cont}
               </a>
+              <div className="text-center">
+                <MessengerLink jersey={jersey} size={size} />
+              </div>
             </div>
             <p className="mt-3 text-center text-xs text-muted">{t.order.note}</p>
           </div>

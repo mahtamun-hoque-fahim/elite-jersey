@@ -32,14 +32,16 @@ title: "Premium quality jerseys, delivered to you.",
   },
   product: {
     home: "Home", size: "Size", askWhatsapp: "Ask on WhatsApp", askBack: "Ask if it is coming back",
-    season: "Season", version: "Version", sizes: "Sizes available",
+    season: "Season", version: "Version", sizes: "Sizes available", downloadImage: "Download image", viewPost: "View on Facebook post",
     about: "About this jersey", colorNote: "Photo colors may vary slightly depending on your screen.", related: "Related jerseys",
   },
   order: {
     title: "Order on WhatsApp", selectSize: "Select size", s1: "Download the jersey photo.", s2: "Open WhatsApp with your order message.", s3: "Attach the photo and send. We confirm the rest there.",
     download: "Download Photo", downloaded: "Photo downloaded", preparing: "Preparing...", cont: "Continue to WhatsApp",
-    note: "We confirm price, delivery and payment on WhatsApp.",
+    note: "Price, delivery and payment are confirmed in the chat.",
     noPhoto: "This jersey has no photo yet. Continue to WhatsApp and we will send you one.",
+    viaMessenger: "Order via Messenger",
+    copied: "Order message copied. Paste it in Messenger and attach the photo.",
   },
   custom: {
     title: "Custom kits for your team", subtitle: "Tell us about your team and what you need. We reply on WhatsApp with the design and price.",
@@ -96,14 +98,16 @@ title: "প্রিমিয়াম কোয়ালিটির জার�
   },
   product: {
     home: "হোম", size: "সাইজ", askWhatsapp: "হোয়াটসঅ্যাপে জিজ্ঞাসা করুন", askBack: "আবার স্টকে আসবে কিনা জিজ্ঞাসা করুন",
-    season: "সিজন", version: "ভার্সন", sizes: "যে সাইজ আছে",
+    season: "সিজন", version: "ভার্সন", sizes: "যে সাইজ আছে", downloadImage: "ছবি ডাউনলোড করুন", viewPost: "ফেসবুক পোস্ট দেখুন",
     about: "এই জার্সি সম্পর্কে", colorNote: "স্ক্রিনভেদে ছবির রঙে সামান্য পার্থক্য হতে পারে।", related: "সম্পর্কিত জার্সি",
   },
   order: {
     title: "হোয়াটসঅ্যাপে অর্ডার করুন", selectSize: "সাইজ বেছে নিন", s1: "জার্সির ছবি ডাউনলোড করুন।", s2: "অর্ডার মেসেজসহ হোয়াটসঅ্যাপ খুলুন।", s3: "ছবিটি অ্যাটাচ করে পাঠান। বাকিটা সেখানেই কনফার্ম করব।",
     download: "ছবি ডাউনলোড করুন", downloaded: "ছবি ডাউনলোড হয়েছে", preparing: "প্রস্তুত হচ্ছে...", cont: "হোয়াটসঅ্যাপে যান",
-    note: "দাম, ডেলিভারি ও পেমেন্ট আমরা হোয়াটসঅ্যাপে কনফার্ম করি।",
+    note: "দাম, ডেলিভারি ও পেমেন্ট চ্যাটে কনফার্ম করা হয়।",
     noPhoto: "এই জার্সির ছবি এখনো যোগ হয়নি। হোয়াটসঅ্যাপে যান, আমরা ছবি পাঠিয়ে দেব।",
+    viaMessenger: "মেসেঞ্জারে অর্ডার করুন",
+    copied: "অর্ডারের মেসেজ কপি হয়েছে। মেসেঞ্জারে পেস্ট করুন ও ছবিটি জুড়ে দিন।",
   },
   custom: {
     title: "আপনার টিমের জন্য কাস্টম কিট", subtitle: "আপনার টিম ও প্রয়োজনের কথা জানান। আমরা হোয়াটসঅ্যাপে ডিজাইন ও দাম জানিয়ে দেব।",

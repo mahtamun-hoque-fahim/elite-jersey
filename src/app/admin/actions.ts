@@ -43,6 +43,7 @@ export async function saveJersey(_prev: State, formData: FormData): Promise<Stat
     inStock: formData.get("inStock") === "on",
     isNew: formData.get("isNew") === "on",
     imageUrl: formData.get("imageUrl") ?? "",
+    fbPostUrl: formData.get("fbPostUrl") ?? "",
     description: formData.get("description") ?? "",
   });
   if (!parsed.success) return { error: firstIssue(parsed.error) };

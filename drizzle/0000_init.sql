@@ -46,6 +46,7 @@ CREATE TABLE "jerseys" (
 	"in_stock" boolean DEFAULT true NOT NULL,
 	"is_new" boolean DEFAULT false NOT NULL,
 	"image_url" text,
+	"fb_post_url" text,
 	"description" text DEFAULT '' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,

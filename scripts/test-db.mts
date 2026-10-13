@@ -4,6 +4,7 @@ import { drizzle } from "drizzle-orm/pglite";
 import { readFileSync } from "node:fs";
 import * as schema from "@/lib/db/schema";
 import * as q from "@/lib/data/queries";
+import { jerseySchema } from "@/lib/validation/schemas";
 
 const c = new PGlite();
 for (const s of readFileSync("drizzle/0000_init.sql", "utf8").split("--> statement-breakpoint")) if (s.trim()) await c.exec(s);
@@ -57,6 +58,21 @@ await q.moveGroup(db, second.id, "up"); cat = await q.fetchCatalog(db);
 ok("move entry up swaps order", cat[0].groups[0].id === second.id && cat[0].groups[1].id === first.id);
 await q.renameType(db, cat[1].id, "Specials"); cat = await q.fetchCatalog(db);
 ok("rename keeps slug", cat[1].name === "Specials" && cat[1].slug === "special");
+
+// Facebook post link: stored, mapped, and validated
+await c.exec(`insert into jerseys (slug,name,group_id,season,price,fb_post_url) values ('c','C','${rm.id}','26/27',990,'https://www.facebook.com/page/posts/123')`);
+const withPost = await q.fetchJerseyBy(db, { slug: "c" });
+ok("fb post url stored and returned", withPost?.fbPostUrl === "https://www.facebook.com/page/posts/123");
+ok("jersey without a post link has none", (await q.fetchJerseyBy(db, { slug: "a" }))?.fbPostUrl === undefined);
+
+const base = { name: "Test Jersey", groupId: "11111111-1111-4111-8111-111111111111", season: "26/27", version: "Player", price: "990", oldPrice: "", sizes: [], inStock: true, isNew: false, imageUrl: "", description: "" };
+const tryUrl = (u: string) => jerseySchema.safeParse({ ...base, fbPostUrl: u });
+ok("valid facebook.com link accepted", tryUrl("https://www.facebook.com/x/posts/1").success);
+ok("m.facebook.com and fb.watch accepted", tryUrl("https://m.facebook.com/p/1").success && tryUrl("https://fb.watch/abc").success);
+ok("empty link becomes null", (() => { const r = tryUrl(""); return r.success && r.data.fbPostUrl === null; })());
+ok("http link rejected", !tryUrl("http://facebook.com/x").success);
+ok("other site rejected", !tryUrl("https://example.com/facebook.com").success && !tryUrl("https://facebook.com.evil.com/x").success);
+ok("javascript: link rejected", !tryUrl("javascript:alert(1)").success);
 
 const failed = process.exitCode;
 if (!failed) console.log("done");

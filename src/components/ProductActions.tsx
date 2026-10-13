@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { MessageCircle } from "lucide-react";
+import { Download, ExternalLink, MessageCircle } from "lucide-react";
+import { FacebookIcon } from "./BrandIcons";
+import { MessengerLink } from "./MessengerLink";
+import { downloadPhoto } from "@/lib/order";
 import { useOrder } from "./OrderProvider";
 import { cn } from "@/lib/cn";
 import { money, type Jersey } from "@/data/jerseys";
@@ -12,6 +15,16 @@ export function ProductActions({ jersey }: { jersey: Jersey }) {
   const { open } = useOrder();
   const { t } = useI18n();
   const [size, setSize] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function saveImage() {
+    setSaving(true);
+    try {
+      await downloadPhoto(jersey);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   const ask = waLink(`Hi Elite Jersey, I have a question about: ${jersey.name} (${money(jersey.price)}).`);
 
@@ -64,6 +77,36 @@ export function ProductActions({ jersey }: { jersey: Jersey }) {
           </a>
         </div>
       )}
+
+      {(jersey.image || jersey.fbPostUrl) && (
+        <div className="flex flex-col gap-3 sm:flex-row">
+          {jersey.image && (
+            <button
+              type="button"
+              onClick={saveImage}
+              disabled={saving}
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-line bg-white px-5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand disabled:opacity-60"
+            >
+              <Download className="size-4" />
+              {t.product.downloadImage}
+            </button>
+          )}
+          {jersey.fbPostUrl && (
+            <a
+              href={jersey.fbPostUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-line bg-white px-5 text-sm font-semibold transition-colors hover:border-brand hover:text-brand"
+            >
+              <FacebookIcon className="size-4" />
+              {t.product.viewPost}
+              <ExternalLink className="size-3.5 text-muted" />
+            </a>
+          )}
+        </div>
+      )}
+
+      <MessengerLink jersey={jersey} size={size} />
     </div>
   );
 }

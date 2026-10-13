@@ -140,6 +140,10 @@ export function JerseyForm({ jersey, types }: { jersey?: Jersey; types: CatalogT
           </label>
         </div>
 
+        <Field label="Facebook post link (optional)" htmlFor="fbPostUrl" hint="Paste the link to this jersey's post. The product page shows a View on Facebook post button when this is set.">
+          <input id="fbPostUrl" name="fbPostUrl" type="url" defaultValue={jersey?.fbPostUrl} placeholder="https://www.facebook.com/..." className={inputCls} />
+        </Field>
+
         <Field label="Description" htmlFor="description"><textarea id="description" name="description" rows={4} defaultValue={jersey?.description} className={textareaCls} /></Field>
       </section>
 

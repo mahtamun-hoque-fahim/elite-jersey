@@ -1,5 +1,5 @@
 {
-  "id": "b91c4648-7822-4384-9e51-abd4bfeb4666",
+  "id": "b70f3b1f-c0ad-4222-8316-7ae2b1df9358",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -351,6 +351,12 @@
         },
         "image_url": {
           "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fb_post_url": {
+          "name": "fb_post_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false

@@ -16,13 +16,14 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
 
 - Updated: 2026-10-12
 - Status: Feature complete, waiting on env vars and first deploy
-- Works: types and entries (clubs, countries, specials) managed in the dashboard and driving the nav, shop filters and product pages, photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, type and entry pages and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
+- Works: Facebook post link per jersey, Download image and Order via Messenger link on the product page, types and entries (clubs, countries, specials) managed in the dashboard and driving the nav, shop filters and product pages, photo placeholders instead of drawn jerseys, dashboard Cloudinary connection check, storefront (home, shop with filters, type and entry pages and product pages, Buy Now popup to WhatsApp, custom order, contact), English / Bengali toggle, admin dashboard (login, first-admin setup, jersey CRUD with Cloudinary upload, inbox, admins), login rate limiting, Cloudflare Workers build verified on `wrangler dev`
 - In progress: nothing half-built
 - Next: fill env vars; in Neon run `drizzle/0000_init.sql` then `drizzle/seed.sql`; create the first admin; confirm Cloudinary on the dashboard Overview; add real jerseys with photos; `npm run preview`; deploy to Vercel and Cloudflare. Then legal pages (needs owner policies) and SEO
 - Watch out:
   - Next.js is pinned to exactly 16.3.8: 16.4.0 returns 500 on every route on Cloudflare with `@opennextjs/cloudflare` 1.20.10 (`Unexpected loadManifest(preview-props.json)`, opennextjs-cloudflare#1355). Do not bump until OpenNext ships the fix, then run `npm run preview`
   - Nothing has run against a real Neon database yet: the schema and Better Auth were tested on local Postgres (PGlite) only
   - The site shows sample jerseys when `DATABASE_URL` is unset; never ship without it
+  - Messenger cannot be prefilled from a website, so the Order via Messenger link copies the order message to the clipboard. It needs `NEXT_PUBLIC_FACEBOOK_PAGE_USERNAME` (inlined at build time, so rebuild after changing it; Turbopack caches it, `rm -rf .next` when testing env changes). Prices are the starting price, bargaining and bKash happen manually in chat, no payment integration
   - Blue (`--color-brand`) is a placeholder until a CTA color is chosen
   - No BRAIN.md and no SITETREE.md exist (project skipped Singularity and tree-man)
   - Only automated tests: `npm run test:db` (database logic on in-memory Postgres). No UI tests
@@ -69,6 +70,11 @@ Execute automatically at the start of every session, before the first commit —
 - Public forms have a honeypot field and a site-wide flood guard (20 stored messages per 10 minutes)
 
 ## Session Log
+
+### 2026-10-12 (messenger and facebook)
+- Did: Added `jerseys.fb_post_url` (validated: https links to facebook.com, fb.com, fb.watch, fb.me only) with a field on the dashboard jersey form. Product page now has Download image, View on Facebook post, and an Order via Messenger text link (also in the Buy Now popup under WhatsApp). Shared order helpers in `src/lib/order.ts`, link component `MessengerLink`. Extended `npm run test:db` to 28 checks. `drizzle/0000_init.sql` regenerated with the new column
+- Decided: WhatsApp stays the Buy Now channel (only one that can be prefilled); Messenger is a text link only because Facebook buyers already reach the page through the post. Hiding jerseys and multiple photos per jersey are not needed
+- Next: unchanged. PLANNER.md does not yet list `fb_post_url` or the Messenger env var (sync on "update repo")
 
 ### 2026-10-12 (types)
 - Did: Jersey types are now fully data-driven. New tables `jersey_types` and `jersey_groups` (entries), jerseys link to an entry with `group_id`; the old `category` and `team` columns are gone. Only Home and Shop are hardcoded in the nav; every type shows as a dropdown with its entries. Dashboard Types section (add, rename, reorder, delete types and entries, set default sizes per entry). Jersey form picks type then entry and can override sizes for one jersey. New shop routes `/shop/[type]` and `/shop/[type]/[group]`. Seed SQL generated from `src/data/seed-types.json`. Added `npm run test:db` (20 checks on in-memory Postgres). Verified on `next start` and on `wrangler dev`
