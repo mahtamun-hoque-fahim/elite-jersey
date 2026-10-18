@@ -22,7 +22,7 @@ Football jersey catalog: browse, tap Buy Now, download the photo, continue on Wh
 1. Clone the repo: `git clone https://github.com/mahtamun-hoque-fahim/elite-jersey`
 2. Install: `npm install`
 3. Copy `.env.example` to `.env.local` and fill in values (see PLANNER.md → Env Vars). Without `DATABASE_URL` the site shows sample jerseys.
-4. Create tables (this file includes the per-jersey Facebook post link column): paste `drizzle/0000_init.sql` into the Neon SQL editor and run it. Then paste `drizzle/seed.sql` to add the starting types and entries (Club, Country, Special and their clubs, countries and specials). The seed is safe to run more than once
+4. Create tables (this file includes the per-jersey Facebook post link column): paste `drizzle/0000_init.sql` into the Neon SQL editor and run it. Then paste `drizzle/seed.sql` to add the starting types and entries (Club, Country, Special and Combo with their entries: the clubs, countries and collabs from the real catalog). The seed is safe to run more than once
 5. Run dev: `npm run dev`
 6. Create the first admin at `/admin/setup` (needs `ADMIN_SETUP_KEY`), then remove that variable
 

@@ -3,21 +3,22 @@
     {
       "name": "Club",
       "slug": "club",
-      "groups": [
-        "Real Madrid", "FC Barcelona", "Manchester City", "Manchester United", "Liverpool", "Arsenal",
-        "Chelsea", "Inter Miami", "AC Milan", "Inter Milan", "Juventus", "FC Bayern Munchen",
-        "Paris Saint-Germain", "Borussia Dortmund", "Atletico Madrid", "Flamengo", "Al-Nassr"
-      ]
+      "groups": ["AC Milan", "Arsenal", "FC Barcelona", "Inter Miami", "Manchester United", "Real Madrid"]
     },
     {
       "name": "Country",
       "slug": "country",
-      "groups": ["Argentina", "Brazil", "Germany", "France", "Spain", "Portugal", "Saudi Arabia", "Bangladesh", "Netherlands"]
+      "groups": ["Argentina", "Bangladesh"]
     },
     {
       "name": "Special",
       "slug": "special",
-      "groups": ["Retro", "Brazil x Jordan", "125 Year Anniversary", "Authentic Edition"]
+      "groups": ["Spider-Man Collab"]
+    },
+    {
+      "name": "Combo",
+      "slug": "combo",
+      "groups": ["Combo Packs"]
     }
   ]
 }

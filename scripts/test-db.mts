@@ -16,8 +16,8 @@ const ok = (n: string, v: boolean) => {
 };
 
 let cat = await q.fetchCatalog(db);
-ok("catalog 3 types in order Club,Country,Special", cat.map((t) => t.name).join() === "Club,Country,Special");
-ok("club has 17 entries, default 6 sizes", cat[0].groups.length === 17 && cat[0].groups[0].sizes.length === 6);
+ok("catalog has 4 types in order Club,Country,Special,Combo", cat.map((t) => t.name).join() === "Club,Country,Special,Combo");
+ok("club has 6 entries, default 6 sizes", cat[0].groups.length === 6 && cat[0].groups[0].sizes.length === 6);
 
 // create type + entry with limited sizes
 const t = await q.createType(db, "Replica"); ok("create type", t.ok);

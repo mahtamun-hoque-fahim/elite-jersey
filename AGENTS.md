@@ -27,7 +27,7 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
   - Blue (`--color-brand`) is a placeholder until a CTA color is chosen
   - No BRAIN.md and no SITETREE.md exist (project skipped Singularity and tree-man)
   - Only automated tests: `npm run test:db` (database logic on in-memory Postgres). No UI tests
-  - Jersey types are data, not code: `drizzle/seed.sql` (generated from `src/data/seed-types.json`) creates Club, Country and Special with their entries. Without `DATABASE_URL` the site falls back to the same seed list so it can be previewed
+  - Jersey types are data, not code: `drizzle/seed.sql` (generated from `src/data/seed-types.json`) creates Club (AC Milan, Arsenal, FC Barcelona, Inter Miami, Manchester United, Real Madrid), Country (Argentina, Bangladesh), Special (Spider-Man Collab) and Combo (Combo Packs). No sample jerseys are bundled: without `DATABASE_URL` the preview shows the menu with an empty shop
 
 ## Git Identity (Session Start — run before any commit, every session)
 
@@ -70,6 +70,11 @@ Execute automatically at the start of every session, before the first commit —
 - Public forms have a honeypot field and a site-wide flood guard (20 stored messages per 10 minutes)
 
 ## Session Log
+
+### 2026-10-12 (real catalog seed)
+- Did: Analysed the owner's chat list of ~36 jersey listings and rebuilt the seed to match (6 clubs, 2 countries, Spider-Man Collab, Combo Packs). Removed the 41 hardcoded sample jerseys; the no-database preview now shows the menu and an empty shop. Test expectations updated (still 28 checks)
+- Decided: retro kits stay under their club (AC Milan 2006/07 etc.); combos go under a Combo type; the Mash t-shirt is not a football jersey and is not seeded
+- Next: owner connects Neon and Vercel env vars, runs `0000_init.sql` then `seed.sql`, creates the first admin; jerseys are added in the dashboard
 
 ### 2026-10-12 (messenger and facebook)
 - Did: Added `jerseys.fb_post_url` (validated: https links to facebook.com, fb.com, fb.watch, fb.me only) with a field on the dashboard jersey form. Product page now has Download image, View on Facebook post, and an Order via Messenger text link (also in the Buy Now popup under WhatsApp). Shared order helpers in `src/lib/order.ts`, link component `MessengerLink`. Extended `npm run test:db` to 28 checks. `drizzle/0000_init.sql` regenerated with the new column
