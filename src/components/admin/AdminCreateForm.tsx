@@ -1,18 +1,19 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useActionForm } from "@/lib/use-action-form";
 import { createAdmin } from "@/app/admin/actions";
 import { Field, inputCls } from "@/components/FormField";
 
 export function AdminCreateForm() {
-  const [state, action, pending] = useActionState(createAdmin, undefined);
+  const { state, onSubmit, pending } = useActionForm(createAdmin);
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (state?.ok) ref.current?.reset();
   }, [state]);
 
   return (
-    <form ref={ref} action={action} className="space-y-4 rounded-xl border border-line bg-white p-5">
+    <form ref={ref} onSubmit={onSubmit} className="space-y-4 rounded-xl border border-line bg-white p-5">
       <h2 className="font-display text-base font-semibold">Add an admin</h2>
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Name" htmlFor="a-name"><input id="a-name" name="name" required className={inputCls} /></Field>

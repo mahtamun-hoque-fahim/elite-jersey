@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useActionForm } from "@/lib/use-action-form";
 import { Loader2, Upload } from "lucide-react";
 import { saveJersey } from "@/app/admin/actions";
 import { Field, inputCls, textareaCls } from "@/components/FormField";
@@ -10,7 +11,7 @@ import { img, type CatalogType, type Jersey } from "@/data/jerseys";
 import { cn } from "@/lib/cn";
 
 export function JerseyForm({ jersey, types }: { jersey?: Jersey; types: CatalogType[] }) {
-  const [state, action, pending] = useActionState(saveJersey, undefined);
+  const { state, onSubmit, pending } = useActionForm(saveJersey);
   const initialType = types.find((t) => t.groups.some((g) => g.id === jersey?.groupId)) ?? types[0];
   const [typeId, setTypeId] = useState(initialType?.id ?? "");
   const type = types.find((t) => t.id === typeId) ?? types[0];
@@ -53,7 +54,7 @@ export function JerseyForm({ jersey, types }: { jersey?: Jersey; types: CatalogT
   }
 
   return (
-    <form action={action} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       {jersey && <input type="hidden" name="id" value={jersey.id} />}
       <input type="hidden" name="imageUrl" value={imageUrl} />
 

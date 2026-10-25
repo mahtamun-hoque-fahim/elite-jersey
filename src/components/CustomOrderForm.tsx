@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useActionForm } from "@/lib/use-action-form";
 import { Send } from "lucide-react";
 import { Field, inputCls, textareaCls } from "./FormField";
 import { SubmitSuccess } from "./SubmitSuccess";
@@ -25,15 +26,15 @@ export function CustomOrderForm() {
   const { t } = useI18n();
   const c = t.custom;
   const [message, setMessage] = useState("");
-  const [state, action, pending] = useActionState(async (prev: Awaited<ReturnType<typeof submitCustomOrder>> | undefined, fd: FormData) => {
+  const { state, onSubmit, pending } = useActionForm(async (prev: Awaited<ReturnType<typeof submitCustomOrder>> | undefined, fd: FormData) => {
     setMessage(buildMessage(fd));
     return submitCustomOrder(prev, fd);
-  }, undefined);
+  });
 
   if (state?.ok) return <SubmitSuccess saved={Boolean(state.saved)} message={message} />;
 
   return (
-    <form action={action} className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
       <div aria-hidden="true" className="absolute -left-[9999px]">
         <input name="website" tabIndex={-1} autoComplete="off" />
       </div>

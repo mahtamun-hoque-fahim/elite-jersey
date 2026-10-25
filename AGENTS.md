@@ -71,6 +71,11 @@ Execute automatically at the start of every session, before the first commit —
 
 ## Session Log
 
+### 2026-10-18 (setup diagnostics)
+- Did: `/admin/setup`, `/admin/login` and the setup action now list which required env vars are missing on the running deployment (names only, `src/lib/env.ts`). Forms that use Server Actions (setup, jersey, admins, custom order, contact) no longer clear their fields when the server returns an error: they use `useActionForm` (`src/lib/use-action-form.ts`) instead of `<form action>`, which React resets after every submit
+- Why: the owner submitted the setup form on Vercel, got "DATABASE_URL is not set yet" and the whole form was wiped
+- Watch out: env var changes on Vercel only apply to a NEW deployment (redeploy), and `NEXT_PUBLIC_*` need a rebuild
+
 ### 2026-10-18 (starting jerseys)
 - Did: Added `seed-jerseys.json` and generated `drizzle/seed-jerseys.sql` (30 jerseys from the owner's chat list: 17 club, 3 country, 2 Spider-Man collabs, 8 combos) with prices from his 450 / 550 / 650 tiers. Removed Inter Miami (no jersey of its own, entries must have children). Season is now optional; empty fields (season, description) are hidden on the product page. The repo working copy had been wiped, so it was re-cloned from GitHub. Database tests now 35 checks including the seed
 - Decided: price tiers 450 current-season kits and Bangladesh kits, 550 retro / premium / goalkeeper / collab, 650 long sleeve and combos (a guess, all editable). "Real Madrid 2011-12 Retro Kit" treated as a single retro jersey despite its (Combo) tag; "Barcelona 2026/27 Away" listed twice in the chat is created once

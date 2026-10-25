@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { requireAdmin } from "@/lib/auth/session";
-import { getDb, requireDb } from "@/lib/db";
+import { requireDb } from "@/lib/db";
 import { jerseys, submissions, user } from "@/lib/db/schema";
 import { adminCount } from "@/lib/data/submissions";
 import { adminSchema, jerseySchema } from "@/lib/validation/schemas";
+import { AUTH_ENV, missingEnv, missingMessage } from "@/lib/env";
 
 export type State = { error?: string; ok?: boolean } | undefined;
 
@@ -116,9 +117,9 @@ export async function deleteAdmin(formData: FormData) {
 
 /** First admin only. Needs ADMIN_SETUP_KEY and an empty user table. */
 export async function setupFirstAdmin(_prev: State, formData: FormData): Promise<State> {
-  if (!getDb()) return { error: "DATABASE_URL is not set yet." };
-  const key = process.env.ADMIN_SETUP_KEY;
-  if (!key) return { error: "ADMIN_SETUP_KEY is not set." };
+  const missing = missingEnv([...AUTH_ENV, "ADMIN_SETUP_KEY"]);
+  if (missing.length) return { error: missingMessage(missing) };
+  const key = process.env.ADMIN_SETUP_KEY!;
   if (String(formData.get("setupKey") ?? "") !== key) return { error: "Wrong setup key." };
   if ((await adminCount()) > 0) return { error: "Setup is already done. Log in instead." };
 

@@ -53,6 +53,10 @@ CLOUDINARY_API_SECRET
 - On each jersey in the dashboard you can paste the link to its Facebook post. The product page then shows View on Facebook post. Only https links to facebook.com, fb.com, fb.watch and fb.me are accepted
 - WhatsApp stays the main Buy Now channel (prefilled message)
 
+## If login or setup says variables are missing
+
+The page lists the missing names. In your host (Vercel: Project, Settings, Environment Variables) add them with the exact names, enable them for Production, then redeploy. Changes to environment variables only apply to a new deployment.
+
 ## Cloudinary (jersey photos)
 
 1. Create a free account at cloudinary.com

@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionForm } from "@/lib/use-action-form";
 import { setupFirstAdmin } from "@/app/admin/actions";
 import { Field, inputCls } from "@/components/FormField";
 
 export function SetupForm() {
-  const [state, action, pending] = useActionState(setupFirstAdmin, undefined);
+  const { state, onSubmit, pending } = useActionForm(setupFirstAdmin);
   return (
-    <form action={action} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4">
       <Field label="Setup key" htmlFor="setupKey"><input id="setupKey" name="setupKey" type="password" required autoComplete="off" className={inputCls} /></Field>
       <Field label="Name" htmlFor="name"><input id="name" name="name" required autoComplete="name" className={inputCls} /></Field>
       <Field label="Email" htmlFor="email"><input id="email" name="email" type="email" required autoComplete="email" className={inputCls} /></Field>

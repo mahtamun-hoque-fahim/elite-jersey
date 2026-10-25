@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useActionForm } from "@/lib/use-action-form";
 import { Send } from "lucide-react";
 import { Field, inputCls, textareaCls } from "./FormField";
 import { SubmitSuccess } from "./SubmitSuccess";
@@ -11,16 +12,16 @@ export function ContactForm() {
   const { t } = useI18n();
   const c = t.contactPage;
   const [message, setMessage] = useState("");
-  const [state, action, pending] = useActionState(async (prev: Awaited<ReturnType<typeof submitContact>> | undefined, fd: FormData) => {
+  const { state, onSubmit, pending } = useActionForm(async (prev: Awaited<ReturnType<typeof submitContact>> | undefined, fd: FormData) => {
     const phone = String(fd.get("phone") ?? "").trim();
     setMessage(`Message from ${String(fd.get("name") ?? "").trim()}${phone ? ` (${phone})` : ""}\n\n${String(fd.get("message") ?? "").trim()}`);
     return submitContact(prev, fd);
-  }, undefined);
+  });
 
   if (state?.ok) return <SubmitSuccess saved={Boolean(state.saved)} message={message} />;
 
   return (
-    <form action={action} className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-line bg-white p-5 sm:p-6">
       <div aria-hidden="true" className="absolute -left-[9999px]">
         <input name="website" tabIndex={-1} autoComplete="off" />
       </div>
