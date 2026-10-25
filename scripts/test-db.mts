@@ -17,7 +17,7 @@ const ok = (n: string, v: boolean) => {
 
 let cat = await q.fetchCatalog(db);
 ok("catalog has 4 types in order Club,Country,Special,Combo", cat.map((t) => t.name).join() === "Club,Country,Special,Combo");
-ok("club has 6 entries, default 6 sizes", cat[0].groups.length === 6 && cat[0].groups[0].sizes.length === 6);
+ok("club has 5 entries, default 6 sizes", cat[0].groups.length === 5 && cat[0].groups[0].sizes.length === 6);
 
 // create type + entry with limited sizes
 const t = await q.createType(db, "Replica"); ok("create type", t.ok);
@@ -73,6 +73,24 @@ ok("empty link becomes null", (() => { const r = tryUrl(""); return r.success &&
 ok("http link rejected", !tryUrl("http://facebook.com/x").success);
 ok("other site rejected", !tryUrl("https://example.com/facebook.com").success && !tryUrl("https://facebook.com.evil.com/x").success);
 ok("javascript: link rejected", !tryUrl("javascript:alert(1)").success);
+
+
+// Starting jerseys seed: applies after the types seed, is idempotent, links every jersey, uses the three prices
+const c2 = new PGlite();
+for (const x of readFileSync("drizzle/0000_init.sql", "utf8").split("--> statement-breakpoint")) if (x.trim()) await c2.exec(x);
+await c2.exec(readFileSync("drizzle/seed.sql", "utf8"));
+await c2.exec(readFileSync("drizzle/seed-jerseys.sql", "utf8"));
+await c2.exec(readFileSync("drizzle/seed-jerseys.sql", "utf8")); // twice: no duplicates
+const db2 = drizzle(c2, { schema }) as unknown as q.AnyDb;
+const seeded = await q.fetchJerseys(db2);
+ok("30 starting jerseys, none duplicated", seeded.length === 30);
+ok("every seeded jersey is linked to a type and an entry", seeded.every((j) => j.typeName && j.groupName));
+ok("prices are only 450, 550 or 650", seeded.every((j) => [450, 550, 650].includes(j.price)));
+ok("seeded jerseys inherit the entry sizes", seeded.every((j) => j.sizesOverride === null && j.sizes.length === 6));
+ok("no seeded jersey has a photo or post link yet", seeded.every((j) => !j.image && !j.fbPostUrl));
+const catalog2 = await q.fetchCatalog(db2);
+ok("every seeded entry has at least one jersey (nothing empty)", catalog2.every((t) => t.groups.every((g) => seeded.some((j) => j.groupId === g.id))));
+ok("combo type holds 8 packs", seeded.filter((j) => j.typeSlug === "combo").length === 8);
 
 const failed = process.exitCode;
 if (!failed) console.log("done");

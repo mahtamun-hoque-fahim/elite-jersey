@@ -27,7 +27,7 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
   const save = savePercent(j);
   const specs = [
     [j.typeName, j.groupName],
-    [t.product.season, j.season],
+    ...(j.season ? [[t.product.season, j.season]] : []),
     [t.product.version, j.version === "Fan" ? t.common.fan : t.common.player],
     [t.product.sizes, j.sizes.join(", ")],
   ];
@@ -73,11 +73,13 @@ export default async function JerseyPage({ params }: PageProps<"/jersey/[slug]">
         </div>
       </div>
 
-      <section className="mt-6 rounded-2xl border border-line bg-white p-6">
-        <h2 className="font-display text-lg font-semibold">{t.product.about}</h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{j.description}</p>
-        <p className="mt-3 text-xs text-muted">{t.product.colorNote}</p>
-      </section>
+      {j.description && (
+        <section className="mt-6 rounded-2xl border border-line bg-white p-6">
+          <h2 className="font-display text-lg font-semibold">{t.product.about}</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted">{j.description}</p>
+          {j.image && <p className="mt-3 text-xs text-muted">{t.product.colorNote}</p>}
+        </section>
+      )}
 
       <section className="mt-12">
         <SectionHeading title={t.product.related} href={`/shop/${j.typeSlug}`} viewAll={t.common.viewAll} />

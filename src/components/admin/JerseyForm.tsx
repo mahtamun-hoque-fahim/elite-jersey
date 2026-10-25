@@ -103,7 +103,7 @@ export function JerseyForm({ jersey, types }: { jersey?: Jersey; types: CatalogT
               ))}
             </select>
           </Field>
-          <Field label="Season" htmlFor="season"><input id="season" name="season" required defaultValue={jersey?.season} placeholder="26/27" className={inputCls} /></Field>
+          <Field label="Season (optional)" htmlFor="season"><input id="season" name="season" defaultValue={jersey?.season} placeholder="26/27" className={inputCls} /></Field>
           <Field label="Version" htmlFor="version">
             <select id="version" name="version" defaultValue={jersey?.version ?? "Player"} className={inputCls}>
               <option>Player</option>

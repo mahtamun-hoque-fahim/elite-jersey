@@ -1,0 +1,42 @@
+{
+  "note": "Prices: 450 current-season kits, 550 retro/premium/goalkeeper/collab, 650 long sleeve and combos. All editable in the dashboard.",
+  "jerseys": [
+    { "name": "AC Milan 2006/07 Home Kit (Premium)", "type": "club", "group": "AC Milan", "season": "2006/07", "price": 550 },
+    { "name": "AC Milan 2006/07 Away Kit (Retro)", "type": "club", "group": "AC Milan", "season": "2006/07", "price": 550 },
+    { "name": "AC Milan 2006/07 Third Kit (Retro)", "type": "club", "group": "AC Milan", "season": "2006/07", "price": 550 },
+    { "name": "AC Milan 2006/07 Long Sleeve Jersey (Retro, Classic Edition)", "type": "club", "group": "AC Milan", "season": "2006/07", "price": 650 },
+
+    { "name": "Real Madrid 2026/27 Home Kit", "type": "club", "group": "Real Madrid", "season": "2026/27", "price": 450 },
+    { "name": "Real Madrid 2026/27 Away Kit", "type": "club", "group": "Real Madrid", "season": "2026/27", "price": 450 },
+    { "name": "Real Madrid 2026/27 Third Kit", "type": "club", "group": "Real Madrid", "season": "2026/27", "price": 450 },
+    { "name": "Real Madrid 2011/12 Retro Kit", "type": "club", "group": "Real Madrid", "season": "2011/12", "price": 550 },
+
+    { "name": "FC Barcelona 2026/27 Home Kit", "type": "club", "group": "FC Barcelona", "season": "2026/27", "price": 450 },
+    { "name": "FC Barcelona 2026/27 Away Kit", "type": "club", "group": "FC Barcelona", "season": "2026/27", "price": 450 },
+    { "name": "FC Barcelona 2026/27 Away Goalkeeper Kit", "type": "club", "group": "FC Barcelona", "season": "2026/27", "price": 550 },
+    { "name": "FC Barcelona 2015 Berlin Final Retro Kit", "type": "club", "group": "FC Barcelona", "season": "2014/15", "price": 550 },
+    { "name": "FC Barcelona Kit (Bc Kit-543)", "type": "club", "group": "FC Barcelona", "season": "", "price": 450 },
+
+    { "name": "Manchester United 2026/27 Home Kit", "type": "club", "group": "Manchester United", "season": "2026/27", "price": 450 },
+    { "name": "Manchester United 2007/08 Away Kit (Retro)", "type": "club", "group": "Manchester United", "season": "2007/08", "price": 550 },
+    { "name": "Manchester United Retro Kit", "type": "club", "group": "Manchester United", "season": "", "price": 550 },
+
+    { "name": "Arsenal 2025/26 Home Kit", "type": "club", "group": "Arsenal", "season": "2025/26", "price": 450 },
+
+    { "name": "Argentina National Team Long Sleeve Special Edition", "type": "country", "group": "Argentina", "season": "", "price": 650 },
+    { "name": "Bangladesh BFF Official Home Jersey (Men's)", "type": "country", "group": "Bangladesh", "season": "", "price": 450 },
+    { "name": "Bangladesh National Football Team Kit", "type": "country", "group": "Bangladesh", "season": "", "price": 450 },
+
+    { "name": "Spider-Man x Real Madrid Jersey", "type": "special", "group": "Spider-Man Collab", "season": "", "price": 550 },
+    { "name": "Spider-Man x Barcelona Jersey", "type": "special", "group": "Spider-Man Collab", "season": "", "price": 550 },
+
+    { "name": "AC Milan & Argentina 2 Jersey Combo", "type": "combo", "group": "Combo Packs", "season": "", "price": 650 },
+    { "name": "Manchester United 2 Jersey Combo Pack", "type": "combo", "group": "Combo Packs", "season": "", "price": 650 },
+    { "name": "AC Milan Full Sleeve Combo (Retro)", "type": "combo", "group": "Combo Packs", "season": "", "price": 650 },
+    { "name": "AC Milan Full Sleeve and Spider Combo", "type": "combo", "group": "Combo Packs", "season": "", "price": 650 },
+    { "name": "Barcelona Combo", "type": "combo", "group": "Combo Packs", "season": "", "price": 650 },
+    { "name": "AC Milan B&W Full Sleeve Combo (Retro, 2006/07 Away and Third Kit)", "type": "combo", "group": "Combo Packs", "season": "2006/07", "price": 650 },
+    { "name": "Inter Miami CF 2026/27 Third and Away Full Sleeve Combo", "type": "combo", "group": "Combo Packs", "season": "2026/27", "price": 650 },
+    { "name": "Real Madrid Combo (2025/26 Home and 2026/27 Third Kit)", "type": "combo", "group": "Combo Packs", "season": "2025/26 & 2026/27", "price": 650 }
+  ]
+}

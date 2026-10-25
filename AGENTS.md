@@ -27,7 +27,7 @@ Football jersey catalog for Bangladeshi fans and local teams: orders finish on W
   - Blue (`--color-brand`) is a placeholder until a CTA color is chosen
   - No BRAIN.md and no SITETREE.md exist (project skipped Singularity and tree-man)
   - Only automated tests: `npm run test:db` (database logic on in-memory Postgres). No UI tests
-  - Jersey types are data, not code: `drizzle/seed.sql` (generated from `src/data/seed-types.json`) creates Club (AC Milan, Arsenal, FC Barcelona, Inter Miami, Manchester United, Real Madrid), Country (Argentina, Bangladesh), Special (Spider-Man Collab) and Combo (Combo Packs). No sample jerseys are bundled: without `DATABASE_URL` the preview shows the menu with an empty shop
+  - Jersey types are data, not code: `drizzle/seed.sql` (generated from `src/data/seed-types.json`) creates Club (AC Milan, Arsenal, FC Barcelona, Manchester United, Real Madrid), Country (Argentina, Bangladesh), Special (Spider-Man Collab) and Combo (Combo Packs). `drizzle/seed-jerseys.sql` (from `src/data/seed-jerseys.json`) adds the 30 starting jerseys (450 / 550 / 650 BDT tiers, no photos). No sample jerseys are bundled in code: without `DATABASE_URL` the preview shows the menu with an empty shop. Season is optional (combos and undated retros have none)
 
 ## Git Identity (Session Start — run before any commit, every session)
 
@@ -70,6 +70,11 @@ Execute automatically at the start of every session, before the first commit —
 - Public forms have a honeypot field and a site-wide flood guard (20 stored messages per 10 minutes)
 
 ## Session Log
+
+### 2026-10-18 (starting jerseys)
+- Did: Added `seed-jerseys.json` and generated `drizzle/seed-jerseys.sql` (30 jerseys from the owner's chat list: 17 club, 3 country, 2 Spider-Man collabs, 8 combos) with prices from his 450 / 550 / 650 tiers. Removed Inter Miami (no jersey of its own, entries must have children). Season is now optional; empty fields (season, description) are hidden on the product page. The repo working copy had been wiped, so it was re-cloned from GitHub. Database tests now 35 checks including the seed
+- Decided: price tiers 450 current-season kits and Bangladesh kits, 550 retro / premium / goalkeeper / collab, 650 long sleeve and combos (a guess, all editable). "Real Madrid 2011-12 Retro Kit" treated as a single retro jersey despite its (Combo) tag; "Barcelona 2026/27 Away" listed twice in the chat is created once
+- Next: owner runs init, seed, seed-jerseys in Neon, sets Vercel env vars, creates the first admin, then adds photos and Facebook links
 
 ### 2026-10-12 (real catalog seed)
 - Did: Analysed the owner's chat list of ~36 jersey listings and rebuilt the seed to match (6 clubs, 2 countries, Spider-Man Collab, Combo Packs). Removed the 41 hardcoded sample jerseys; the no-database preview now shows the menu and an empty shop. Test expectations updated (still 28 checks)

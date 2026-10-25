@@ -56,7 +56,7 @@ export default async function JerseysAdminPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="line-clamp-1 font-semibold">{j.name}</p>
-                        <p className="text-xs text-muted">{j.season} &middot; {j.sizes.join(", ")}{j.sizesOverride ? " (custom)" : ""}</p>
+                        <p className="text-xs text-muted">{j.season ? `${j.season} · ` : ""}{j.sizes.join(", ")}{j.sizesOverride ? " (custom)" : ""}</p>
                       </div>
                     </div>
                   </td>

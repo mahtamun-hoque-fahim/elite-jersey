@@ -29,7 +29,7 @@ export function ShopClient({ items, types, initialGroups = [] }: { items: Jersey
   const [page, setPage] = useState(1);
   const [sheet, setSheet] = useState(false);
 
-  const seasonOptions = useMemo(() => [...new Set(items.map((j) => j.season))].sort().reverse(), [items]);
+  const seasonOptions = useMemo(() => [...new Set(items.map((j) => j.season).filter(Boolean))].sort().reverse(), [items]);
 
   const filtered = useMemo(() => {
     const list = items.filter(

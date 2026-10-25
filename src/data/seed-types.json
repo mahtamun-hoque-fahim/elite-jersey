@@ -3,7 +3,7 @@
     {
       "name": "Club",
       "slug": "club",
-      "groups": ["AC Milan", "Arsenal", "FC Barcelona", "Inter Miami", "Manchester United", "Real Madrid"]
+      "groups": ["AC Milan", "Arsenal", "FC Barcelona", "Manchester United", "Real Madrid"]
     },
     {
       "name": "Country",

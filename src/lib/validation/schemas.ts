@@ -18,7 +18,7 @@ const money = z.coerce.number().int().min(0).max(1_000_000);
 export const jerseySchema = z.object({
   name: z.string().trim().min(3).max(160),
   groupId: z.string().uuid("Pick a type and an entry"),
-  season: z.string().trim().min(2).max(20),
+  season: z.string().trim().max(20), // optional: some kits (combos, undated retros) have no season
   version: z.enum(["Player", "Fan"]),
   price: money.refine((n) => n > 0, "Price is required"),
   oldPrice: z
